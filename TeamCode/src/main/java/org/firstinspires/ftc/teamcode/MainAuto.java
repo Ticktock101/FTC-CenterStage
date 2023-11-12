@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -39,6 +40,9 @@ public class MainAuto extends LinearOpMode {
     DcMotor rightBack;
     DcMotor leftFront;
     DcMotor leftBack;
+
+    RevRoboticsCoreHexMotor rightArm;
+    RevRoboticsCoreHexMotor leftArm;
 
     Servo rightClaw;
     Servo leftClaw;

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -24,6 +25,9 @@ public class MecanumDrive extends LinearOpMode {
     Servo rightClaw;
     Servo leftClaw;
 
+    RevRoboticsCoreHexMotor rightArm;
+    RevRoboticsCoreHexMotor leftArm;
+
 //    BHI260IMU imu;
 //    IMU.Parameters myIMUparameters;
 
@@ -35,6 +39,9 @@ public class MecanumDrive extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "backRight");
         leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
+
+        rightArm = hardwareMap.get(RevRoboticsCoreHexMotor.class, "rightArm");
+        leftArm = hardwareMap.get(RevRoboticsCoreHexMotor.class, "leftArm");
 
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
@@ -72,6 +79,9 @@ public class MecanumDrive extends LinearOpMode {
 
             double rx = gamepad1.right_stick_x;
 
+            double rt = gamepad1.right_trigger;
+            double lt = gamepad1.left_trigger;
+
 
 //            double botHeading = -imu.getRobotOrientation()
 
@@ -94,6 +104,7 @@ public class MecanumDrive extends LinearOpMode {
             rightFront.setPower(y - x - rx);
             rightBack.setPower(y + x - rx);
 
+            
             if (gamepad1.a)
             {
                 rightClaw.setPosition(-90);
@@ -104,7 +115,6 @@ public class MecanumDrive extends LinearOpMode {
                 rightClaw.setPosition(0);
                 leftClaw.setPosition(0);
             }
-
 
         }
     }
