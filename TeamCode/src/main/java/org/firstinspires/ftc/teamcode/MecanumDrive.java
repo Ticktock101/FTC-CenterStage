@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -25,8 +26,8 @@ public class MecanumDrive extends LinearOpMode {
     Servo rightClaw;
     Servo leftClaw;
 
-    RevRoboticsCoreHexMotor rightArm;
-    RevRoboticsCoreHexMotor leftArm;
+    DcMotor rightArm1;
+    DcMotor leftArm1;
 
 //    BHI260IMU imu;
 //    IMU.Parameters myIMUparameters;
@@ -40,11 +41,14 @@ public class MecanumDrive extends LinearOpMode {
         leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
 
-        rightArm = hardwareMap.get(RevRoboticsCoreHexMotor.class, "rightArm");
-        leftArm = hardwareMap.get(RevRoboticsCoreHexMotor.class, "leftArm");
+        rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
+        leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
+        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
-        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
+//
+//        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
+//        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
 
 //        imu = hardwareMap.get(BHI260IMU.class, "imu");
 
@@ -81,6 +85,28 @@ public class MecanumDrive extends LinearOpMode {
 
             double rt = gamepad1.right_trigger;
             double lt = gamepad1.left_trigger;
+            int rightPosition = rightArm1.getCurrentPosition();
+            int leftPosition = leftArm1.getCurrentPosition();
+
+            if (rightPosition > -115 && (rt - lt) == 0)
+            {
+
+
+                telemetry.addData("# right position value", rightPosition);
+                telemetry.addData("# left position value", leftPosition);
+
+
+
+                telemetry.update();
+
+                rightArm1.setPower(0.5);
+                leftArm1.setPower(-0.5);
+
+
+            }
+
+            rightArm1.setPower(rt - lt);
+            leftArm1.setPower(-(rt - lt));
 
 
 //            double botHeading = -imu.getRobotOrientation()
@@ -99,22 +125,22 @@ public class MecanumDrive extends LinearOpMode {
 //
 //            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
-            leftFront.setPower(y + x + rx);
-            leftBack.setPower(y - x + rx);
+            leftFront.setPower(-(y + x + rx));
+            leftBack.setPower(-(y - x + rx));
             rightFront.setPower(y - x - rx);
             rightBack.setPower(y + x - rx);
 
             
-            if (gamepad1.a)
-            {
-                rightClaw.setPosition(-90);
-                leftClaw.setPosition(90);
-            }
-            else if (gamepad1.b)
-            {
-                rightClaw.setPosition(0);
-                leftClaw.setPosition(0);
-            }
+//            if (gamepad1.a)
+//            {
+//                rightClaw.setPosition(-90);
+//                leftClaw.setPosition(90);
+//            }
+//            else if (gamepad1.b)
+//            {
+//                rightClaw.setPosition(0);
+//                leftClaw.setPosition(0);
+//            }
 
         }
     }
