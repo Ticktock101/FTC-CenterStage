@@ -28,6 +28,7 @@ public class MecanumDrive extends LinearOpMode {
 
     DcMotor rightArm1;
     DcMotor leftArm1;
+    DcMotor wristMotor;
 
 //    BHI260IMU imu;
 //    IMU.Parameters myIMUparameters;
@@ -40,38 +41,19 @@ public class MecanumDrive extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, "backRight");
         leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
+        wristMotor = hardwareMap.get(DcMotor.class, "wrist");
 
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
         rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//
-//        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
-//        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
+        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//        imu = hardwareMap.get(BHI260IMU.class, "imu");
 
-//        imu.initialize(
-//                new IMU.Parameters(
-//                        new RevHubOrientationOnRobot(
-//                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-//                                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-//                        )
-//                )
-//        );
-
-//
-//
-//        myIMUparameters = new IMU.Parameters(
-//                new RevHubOrientationOnRobot(
-//                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
-//                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-//                )
-//        );
-//
-//        imu.initialize(myIMUparameters);
-
+        rightClaw = hardwareMap.get(Servo.class, "rightServo");
+        leftClaw = hardwareMap.get(Servo.class, "leftServo");
 
 
         waitForStart();
@@ -88,7 +70,7 @@ public class MecanumDrive extends LinearOpMode {
             int rightPosition = rightArm1.getCurrentPosition();
             int leftPosition = leftArm1.getCurrentPosition();
 
-            if (rightPosition > -115 && (rt - lt) == 0)
+            if (leftPosition > -115 && (rt - lt) == 0)
             {
 
 
@@ -100,7 +82,7 @@ public class MecanumDrive extends LinearOpMode {
                 telemetry.update();
 
                 rightArm1.setPower(0.5);
-                leftArm1.setPower(-0.5);
+                leftArm1.setPower(-.5);
 
 
             }
@@ -109,39 +91,30 @@ public class MecanumDrive extends LinearOpMode {
             leftArm1.setPower(-(rt - lt));
 
 
-//            double botHeading = -imu.getRobotOrientation()
-
-//            double botHeading = -imu.getRobotOrientation(
-//                    AxesReference.INTRINSIC,
-//                    AxesOrder.XYZ,
-//                    AngleUnit.DEGREES
-//            ).firstAngle;
-
-//            double botHeading = -imu.getRobotOrientation().firstAngle;
-
-//            double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-//            double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
-//
-//
-//            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-
             leftFront.setPower(-(y + x + rx));
             leftBack.setPower(-(y - x + rx));
             rightFront.setPower(y - x - rx);
             rightBack.setPower(y + x - rx);
 
             
-//            if (gamepad1.a)
-//            {
-//                rightClaw.setPosition(-90);
-//                leftClaw.setPosition(90);
-//            }
-//            else if (gamepad1.b)
-//            {
-//                rightClaw.setPosition(0);
-//                leftClaw.setPosition(0);
-//            }
-
+            if (gamepad1.a)
+            {
+                rightClaw.setPosition(0);
+                leftClaw.setPosition(0);
+            }
+            else if (gamepad1.b)
+            {
+                rightClaw.setPosition(90);
+                leftClaw.setPosition(90);
+            }
+            if (gamepad1.right_bumper) {
+                wristMotor.setPower(.3);
+            }
+            else if (gamepad1.left_bumper) {
+                wristMotor.setPower(-.3);
+            } else {
+                wristMotor.setPower(0);
+            }
         }
     }
 }
