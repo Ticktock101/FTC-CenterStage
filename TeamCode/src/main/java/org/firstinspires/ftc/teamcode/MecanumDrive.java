@@ -104,8 +104,8 @@ public class MecanumDrive extends LinearOpMode {
             }
             else if (gamepad1.b)
             {
-                rightClaw.setPosition(90);
-                leftClaw.setPosition(90);
+                rightClaw.setPosition(135);
+                leftClaw.setPosition(45);
             }
             if (gamepad1.right_bumper) {
                 wristMotor.setPower(.3);

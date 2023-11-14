@@ -79,15 +79,21 @@ public class MainAuto extends LinearOpMode {
                 telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
             }
 
-            while (x != 0)
+            while (x < 200 || x > 300)
             {
-                if (x < 0)
+                if (x < 200)
                 {
+                    leftFront.setPower(DcMotorPower);
+                    leftBack.setPower(DcMotorPower);
 
+                    sleep(200);
                 }
                 else if (x > 0)
                 {
+                    rightBack.setPower(DcMotorPower);
+                    rightFront.setPower(DcMotorPower);
 
+                    sleep(200);
                 }
             }
 
@@ -102,6 +108,9 @@ public class MainAuto extends LinearOpMode {
             leftFront.setPower(0);
             rightBack.setPower(0);
             leftBack.setPower(0);
+
+
+
         }
 
     }
