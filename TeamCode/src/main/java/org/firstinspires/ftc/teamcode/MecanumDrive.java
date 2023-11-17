@@ -30,8 +30,12 @@ public class MecanumDrive extends LinearOpMode {
     DcMotor leftArm1;
     DcMotor wristMotor;
 
+    double targetArmHeight = 0;
+
 //    BHI260IMU imu;
 //    IMU.Parameters myIMUparameters;
+
+
 
 
     @Override
@@ -54,9 +58,21 @@ public class MecanumDrive extends LinearOpMode {
 
         rightClaw = hardwareMap.get(Servo.class, "rightServo");
         leftClaw = hardwareMap.get(Servo.class, "leftServo");
+        rightClaw.setDirection(Servo.Direction.REVERSE);
 
 
         waitForStart();
+
+        boolean isReset = false;
+
+        int armRightStart = rightArm1.getCurrentPosition();
+        int armLeftStart = leftArm1.getCurrentPosition();
+
+        int wristStart = wristMotor.getCurrentPosition();
+
+
+        boolean gripClaw = true;
+        boolean aButtonUpdate = false;
 
         while (opModeIsActive())
         {
@@ -70,51 +86,124 @@ public class MecanumDrive extends LinearOpMode {
             int rightPosition = rightArm1.getCurrentPosition();
             int leftPosition = leftArm1.getCurrentPosition();
 
-            if (leftPosition > -115 && (rt - lt) == 0)
-            {
+            telemetry.addData("wrist start", wristStart);
+            telemetry.addData("wrist curr", wristMotor.getCurrentPosition());
 
 
-                telemetry.addData("# right position value", rightPosition);
-                telemetry.addData("# left position value", leftPosition);
-
-
-
-                telemetry.update();
-
-                rightArm1.setPower(0.5);
-                leftArm1.setPower(-.5);
-
-
+            double direction = 0;
+            double wristDirection = 0;
+            // Ryan Strobel is a legend
+            if (!isReset) {
+                 direction = rt - lt;
+                 if (gamepad1.right_bumper) {wristDirection = 1;}
+                 else if (gamepad1.left_bumper) {wristDirection = -1;}
+                 else {wristDirection = 0;};
+            }
+            else {
+                direction = -1 * (rightArm1.getCurrentPosition() - armRightStart);
+                wristDirection = (wristMotor.getCurrentPosition() - wristStart);
+                if (Math.abs(direction) < 10) {
+                    isReset = false;
+                }
             }
 
-            rightArm1.setPower(rt - lt);
-            leftArm1.setPower(-(rt - lt));
+                if (direction == 0) {
+                    rightArm1.setPower(0);
+                    leftArm1.setPower(0);
+                }
+
+                if (direction > 0) {
+                    leftArm1.setPower(-1);
+                    rightArm1.setPower(1);
+                }
+                if (direction < 0) {
+                    leftArm1.setPower(1);
+                    rightArm1.setPower(-1);
+                }
+                if (wristDirection == 0){
+                    wristMotor.setPower(0);
+                }
+                if (wristDirection > 0) {
+                    wristMotor.setPower(.3);
+                }
+                if (wristDirection < 0) {
+                    wristMotor.setPower(-.3);
+                }
 
 
-            leftFront.setPower(-(y + x + rx));
-            leftBack.setPower(-(y - x + rx));
-            rightFront.setPower(y - x - rx);
-            rightBack.setPower(y + x - rx);
+
+
+
+            telemetry.addData( "left claw position", leftClaw.getPosition());
+            telemetry.addData( "right claw position", rightClaw.getPosition());
+            telemetry.update();
+
+
+            double wheelSpeed = 0.5; //0.0 - 1
+
+
+            leftFront.setPower(-(y + x + rx) * wheelSpeed);
+            leftBack.setPower(-(y - x + rx) * wheelSpeed);
+            rightFront.setPower((y - x - rx) * wheelSpeed);
+            rightBack.setPower((y + x - rx) * wheelSpeed);
+
+            if (gamepad1.a) {
+                aButtonUpdate = true;
+            }
+            else {
+                if (aButtonUpdate == true) {
+                    gripClaw = !gripClaw;
+                    aButtonUpdate = false;
+                }
+            }
+
 
             
-            if (gamepad1.a)
+            if (gripClaw)
             {
+
+//                telemetry.addData("right servo position", rightClaw.getPosition());
+//                telemetry.addData("left servo position", leftClaw.getPosition());
+
+                telemetry.update();
                 rightClaw.setPosition(0);
                 leftClaw.setPosition(0);
             }
-            else if (gamepad1.b)
+            else
             {
-                rightClaw.setPosition(135);
-                leftClaw.setPosition(45);
+                telemetry.addData("right servo position", rightClaw.getPosition());
+//                telemetry.addData("left servo position", leftClaw.getPosition());
+
+                telemetry.update();
+
+                rightClaw.setPosition(0.1);
+                leftClaw.setPosition(0.1);
+
             }
-            if (gamepad1.right_bumper) {
-                wristMotor.setPower(.3);
+
+
+            if (gamepad1.left_stick_button) {
+                wheelSpeed = 1;
             }
-            else if (gamepad1.left_bumper) {
-                wristMotor.setPower(-.3);
-            } else {
-                wristMotor.setPower(0);
+            else {
+                wheelSpeed = 0.5;
             }
+            if (gamepad1.right_stick_button) {
+                wheelSpeed = 0.25;
+            }
+            else {
+                wheelSpeed = 0.5;
+            }
+            telemetry.addData("Reset", gamepad1.y);
+
+            if (gamepad1.y) {
+                rightArm1.setTargetPosition(armRightStart);
+                leftArm1.setTargetPosition(armLeftStart);
+                isReset = true;
+
+            }
+
+
         }
     }
 }
