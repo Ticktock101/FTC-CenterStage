@@ -46,6 +46,7 @@ public class MecanumDrive extends LinearOpMode {
         leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
         wristMotor = hardwareMap.get(DcMotor.class, "wrist");
+        wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
@@ -133,9 +134,9 @@ public class MecanumDrive extends LinearOpMode {
 
 
 
-
             telemetry.addData( "left claw position", leftClaw.getPosition());
             telemetry.addData( "right claw position", rightClaw.getPosition());
+
             telemetry.update();
 
 

@@ -1,21 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BHI260IMU;
-import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import java.lang.reflect.Array;
 
-@TeleOp (name = "Strobel")
+@Autonomous(name = "Strobel")
 public class Strobel extends LinearOpMode {
 
     DcMotor rightFront;
@@ -36,6 +29,148 @@ public class Strobel extends LinearOpMode {
 //    IMU.Parameters myIMUparameters;
 
 
+    private void strobelEvent(String name) {
+            if (name == "auto") {
+                driveRotate(1,.5);
+                sleep(500);
+                driveThrottle(1,1);
+                sleep(1000);
+                gripClaw(false);
+            }
+            if (name == "ready") {
+                moveArm(1,.5);
+                moveArm(-1,.5);
+                gripClaw(false);
+                gripClaw(true);
+            }
+
+
+    }
+
+    boolean autonomous = false;
+
+    private class StrobelAnimationSequence {
+
+        private String[] eventSequence = new String[]{
+                "auto"
+        };
+        StrobelAnimationSequence(String[] eventSequence) {
+            this.eventSequence = eventSequence;
+        }
+
+
+        public void play() {
+            for (String anim : eventSequence) {
+                strobelEvent(anim);
+            }
+        }
+    }
+
+    private void driveRotate(double direction, double time) {
+        double wheelSpeed = 0.5; //0.0 - 1.0
+
+        double y = -direction;
+        double x = direction;
+
+        double rx = 0;
+
+        leftFront.setPower(-(y + x + rx) * wheelSpeed);
+        leftBack.setPower(-(y - x + rx) * wheelSpeed);
+        rightFront.setPower((y - x - rx) * wheelSpeed);
+        rightBack.setPower((y + x - rx) * wheelSpeed);
+
+        while (time >= 0) {
+            time -= .1;
+            sleep(100);
+        }
+
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+
+
+    }
+
+    private void driveThrottle(double strength, double time) {
+        double wheelSpeed = 0.5; //0.0 - 1
+        double rx = strength;
+
+
+        leftFront.setPower(-(0 + 0 + rx) * wheelSpeed);
+        leftBack.setPower(-(0 - 0 + rx) * wheelSpeed);
+        rightFront.setPower((0 - 0 - rx) * wheelSpeed);
+        rightBack.setPower((0 + 0 - rx) * wheelSpeed);
+
+        while (time >= 0) {
+            time -= .1;
+            sleep(100);
+        }
+
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+
+    }
+
+    private void moveArm(double direction, double time) {
+
+        if (direction > 0) {
+            leftArm1.setPower(-1);
+            rightArm1.setPower(1);
+        }
+        if (direction < 0) {
+            leftArm1.setPower(1);
+            rightArm1.setPower(-1);
+        }
+        if (direction == 0) {
+            leftArm1.setPower(0);
+            rightArm1.setPower(0);
+        }
+
+        while (time >= 0) {
+            time -= .1;
+            sleep(100);
+        }
+
+        leftArm1.setPower(0);
+        rightArm1.setPower(0);
+    }
+
+    private void bendWrist(double direction, double time) {
+
+        if (direction > 0) {
+            wristMotor.setPower(1);;
+        }
+        if (direction < 0) {
+            wristMotor.setPower(-1);
+        }
+        if (direction == 0) {
+            wristMotor.setPower(0);
+        }
+
+        while (time >= 0) {
+            time -= .1;
+            sleep(100);
+        }
+
+        wristMotor.setPower(0);
+    }
+
+    private void gripClaw(boolean closed) {
+        if (closed)
+        {
+            rightClaw.setPosition(0);
+            leftClaw.setPosition(0);
+        }
+        else
+        {
+            rightClaw.setPosition(0.1);
+            leftClaw.setPosition(0.1);
+        }
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -44,6 +179,7 @@ public class Strobel extends LinearOpMode {
         leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
         wristMotor = hardwareMap.get(DcMotor.class, "wrist");
+        wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
@@ -61,7 +197,26 @@ public class Strobel extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) {
+        String[] sequence = new String[]{"auto"};
+
+        StrobelAnimationSequence anim = new StrobelAnimationSequence(sequence);
+        anim.play();
+
+        stop();
+
+        boolean isReset = false;
+
+        int armRightStart = rightArm1.getCurrentPosition();
+        int armLeftStart = leftArm1.getCurrentPosition();
+
+        int wristStart = wristMotor.getCurrentPosition();
+
+
+        boolean gripClaw = true;
+        boolean aButtonUpdate = false;
+
+        while (opModeIsActive())
+        {
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
 
@@ -72,32 +227,124 @@ public class Strobel extends LinearOpMode {
             int rightPosition = rightArm1.getCurrentPosition();
             int leftPosition = leftArm1.getCurrentPosition();
 
-
-            double direction = rt - lt;
-            double current = leftArm1.getCurrentPosition();
-            double delta = targetArmHeight;
-
-            targetArmHeight += (.5 * direction);
-            targetArmHeight = Math.min(Math.max(targetArmHeight, 5),100);
+            telemetry.addData("wrist start", wristStart);
+            telemetry.addData("wrist curr", wristMotor.getCurrentPosition());
 
 
-
-            delta = .5 * (targetArmHeight - current);
-
-            if (delta < .5) {
-                delta = 0;
+            double direction = 0;
+            double wristDirection = 0;
+            // Ryan Strobel is a legend
+            if (!isReset) {
+                direction = rt - lt;
+                if (gamepad1.right_bumper) {wristDirection = 1;}
+                else if (gamepad1.left_bumper) {wristDirection = -1;}
+                else {wristDirection = 0;};
+            }
+            else {
+                direction = -0.25 * (rightArm1.getCurrentPosition() - armRightStart);
+                wristDirection = (wristMotor.getCurrentPosition() - wristStart);
+                if (Math.abs(direction) < 10) {
+                    isReset = false;
+                }
             }
 
-            leftArm1.setPower(delta);
-            rightArm1.setPower(-delta);
+            if (direction == 0) {
+                rightArm1.setPower(0);
+                leftArm1.setPower(0);
+            }
 
-            telemetry.addData( "left arm position", delta);
+            if (direction > 0) {
+                leftArm1.setPower(-1);
+                rightArm1.setPower(1);
+            }
+            if (direction < 0) {
+                leftArm1.setPower(1);
+                rightArm1.setPower(-1);
+            }
+            if (wristDirection == 0){
+                wristMotor.setPower(0);
+            }
+            if (wristDirection > 0) {
+                wristMotor.setPower(.3);
+            }
+            if (wristDirection < 0) {
+                wristMotor.setPower(-.3);
+            }
+
+
+
+
+            telemetry.addData( "left claw position", leftClaw.getPosition());
+            telemetry.addData( "right claw position", rightClaw.getPosition());
+
             telemetry.update();
 
+
+            double wheelSpeed = 0.5; //0.0 - 1
+
+
+            leftFront.setPower(-(y + x + rx) * wheelSpeed);
+            leftBack.setPower(-(y - x + rx) * wheelSpeed);
+            rightFront.setPower((y - x - rx) * wheelSpeed);
+            rightBack.setPower((y + x - rx) * wheelSpeed);
+
+            if (gamepad1.a) {
+                aButtonUpdate = true;
+            }
+            else {
+                if (aButtonUpdate == true) {
+                    gripClaw = !gripClaw;
+                    aButtonUpdate = false;
+                }
+            }
+
+
+
+            if (gripClaw)
+            {
+
+//                telemetry.addData("right servo position", rightClaw.getPosition());
+//                telemetry.addData("left servo position", leftClaw.getPosition());
+
+                telemetry.update();
+                rightClaw.setPosition(0);
+                leftClaw.setPosition(0);
+            }
+            else
+            {
+                telemetry.addData("right servo position", rightClaw.getPosition());
+//                telemetry.addData("left servo position", leftClaw.getPosition());
+
+                telemetry.update();
+
+                rightClaw.setPosition(0.1);
+                leftClaw.setPosition(0.1);
+
+            }
+
+
+            if (gamepad1.left_stick_button) {
+                wheelSpeed = 1;
+            }
+            else {
+                wheelSpeed = 0.5;
+            }
+            if (gamepad1.right_stick_button) {
+                wheelSpeed = 0.25;
+            }
+            else {
+                wheelSpeed = 0.5;
+            }
+            telemetry.addData("Reset", gamepad1.y);
+
+            if (gamepad1.y) {
+                rightArm1.setTargetPosition(armRightStart);
+                leftArm1.setTargetPosition(armLeftStart);
+                isReset = true;
+
+            }
+
+
         }
-    }
-
-    private void moveArm() {
-
     }
 }
