@@ -21,12 +21,12 @@
      private boolean isRunning = true;
 
 
-     private String modelFileName = "rings_float.tflite";//"croppedRingRec.tflite";
+     private String modelFileName = "model_unquant.tflite";//"croppedRingRec.tflite";
      private String labelFileName = "labels.txt";//"croppedLabels.txt";
      private static Classifier.Model MODEl_TYPE = Classifier.Model.FLOAT_EFFICIENTNET;
-     private static final String LABEL_A = "None";
-     private static final String LABEL_B = "Single";
-     private static final String LABEL_C = "Quad";
+     private static final String LABEL_A = "1";
+     private static final String LABEL_B = "2";
+     private static final String LABEL_C = "3";
 
      private String result = LABEL_B; //just a default value.
 
