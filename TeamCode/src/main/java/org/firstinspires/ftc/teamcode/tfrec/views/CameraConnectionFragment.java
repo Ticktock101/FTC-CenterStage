@@ -337,8 +337,7 @@ public class CameraConnectionFragment extends Fragment {
         } catch (final NullPointerException e) {
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
-            ErrorDialog.newInstance(getString(R.string.tfe_ic_camera_error))
-                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
+            ErrorDialog.newInstance(getString(R.string.tfe_ic_camera_error)).show(getChildFragmentManager(), FRAGMENT_DIALOG);
             throw new IllegalStateException(getString(R.string.tfe_ic_camera_error));
         }
 

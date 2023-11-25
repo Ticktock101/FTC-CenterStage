@@ -1,5 +1,6 @@
  package org.firstinspires.ftc.teamcode;
 
+ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  import com.qualcomm.robotcore.hardware.HardwareMap;
  import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,7 +14,8 @@
  import java.util.ArrayList;
  import java.util.List;
 
- public class GenericDetector implements Runnable{
+ @Autonomous(name = "TestDetector")
+ public class TestDetector implements Runnable{
      Telemetry telemetry;
      private Detector tfDetector = null;
      private HardwareMap hardwareMap;
@@ -34,7 +36,7 @@
 
 
 
-     public GenericDetector(HardwareMap hMap, LinearOpMode caller, Telemetry t) throws Exception {
+     public TestDetector(HardwareMap hMap, LinearOpMode caller, Telemetry t) throws Exception {
          hardwareMap = hMap;
          telemetry = t;
          initDetector();
@@ -43,7 +45,7 @@
 
      }
 
-     public GenericDetector(HardwareMap hMap, LinearOpMode caller, Telemetry t, String model, String labels) throws Exception {
+     public TestDetector(HardwareMap hMap, LinearOpMode caller, Telemetry t, String model, String labels) throws Exception {
          hardwareMap = hMap;
          telemetry = t;
          setModelFileName(model);
