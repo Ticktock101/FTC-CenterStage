@@ -56,9 +56,7 @@
      }
 
 
-
-
-     public void detectRingThread() {
+     public void detectLocation() {
 
          ElapsedTime runtime = new ElapsedTime();
          runtime.reset();
@@ -117,7 +115,7 @@
      @Override
      public void run() {
          while(isRunning) {
-             detectRingThread();
+             detectLocation();
          }
      }
 
