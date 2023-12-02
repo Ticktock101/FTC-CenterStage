@@ -16,6 +16,8 @@ public class GenericRecognitionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        waitForStart();
+
         try {
             // Initialize and start the detection thread
             try {
@@ -40,7 +42,7 @@ public class GenericRecognitionTest extends LinearOpMode {
 
             // Wait for the game to start (driver presses PLAY)
             telemetry.update();
-            waitForStart();
+//            waitForStart();
 
             // Continue with your autonomous code after the start button is pressed
           rf.stopDetection();

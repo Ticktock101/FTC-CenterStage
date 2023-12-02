@@ -30,6 +30,8 @@ public class MecanumDrive extends LinearOpMode {
     DcMotor leftArm1;
     DcMotor wristMotor;
 
+    DcMotor slide;
+
     double targetArmHeight = 0;
 
 //    BHI260IMU imu;
@@ -47,6 +49,9 @@ public class MecanumDrive extends LinearOpMode {
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
         wristMotor = hardwareMap.get(DcMotor.class, "wrist");
         wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        slide = hardwareMap.get(DcMotor.class, "slide");
+
 
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
@@ -203,6 +208,25 @@ public class MecanumDrive extends LinearOpMode {
                 isReset = true;
 
             }
+
+            if (gamepad2.left_trigger > 0)
+            {
+                slide.setPower(gamepad2.left_trigger);
+            }
+//            else
+//            {
+//                slide.setPower(0);
+//            }
+
+            if (gamepad2.right_trigger > 0)
+            {
+                slide.setPower(-gamepad2.right_trigger);
+            }
+//            else
+//            {
+//                slide.setPower(0);
+//            }
+
 
 
         }
