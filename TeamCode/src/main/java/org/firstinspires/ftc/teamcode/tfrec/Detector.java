@@ -22,6 +22,8 @@ import android.view.Surface;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.fragment.app.FragmentActivity;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.tfrec.classification.Classifier;
@@ -64,7 +66,7 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
     private List<Classifier.Recognition> lastResults = null;
     private int tfodMonitorViewId = -1;
-    private Fragment fragment;
+    private androidx.fragment.app.Fragment fragment;
 
     /** Input image size of the model along x axis. */
     private int imageSizeX;
@@ -205,8 +207,7 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
             fragment =
                     new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize(), telemetry);
         }
-
-
+        ((FragmentActivity)appContext).getSupportFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         //((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         Log.d(TAG, "SetFragment. Complete");
     }

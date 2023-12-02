@@ -26,7 +26,7 @@
      private static final String LABEL_B = "2";
      private static final String LABEL_C = "3";
 
-     private String result = LABEL_B; //just a default value.
+     private String result = "nothing yet"; //just a default value.
 
      private LinearOpMode caller = null;
 
@@ -66,8 +66,8 @@
                          if (true) {
 //                         (r.getConfidence() >= 0.1) {
                              telemetry.addData("PrintZone", r.getTitle());
-                             if (r.getTitle().contains(LABEL_B)) {
-                                 this.result = LABEL_B;
+                             if (r.getTitle().contains(LABEL_C)) {
+                                 this.result = LABEL_C;
                              }
                              else if(r.getTitle().contains(LABEL_B)){
                                  this.result = LABEL_B;
