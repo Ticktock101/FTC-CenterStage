@@ -302,4 +302,7 @@ public class SampleTankDrive extends TankDrive {
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
+
+    public void setMotorPowers(double motorPower, int i, int i1, int i2) {
+    }
 }

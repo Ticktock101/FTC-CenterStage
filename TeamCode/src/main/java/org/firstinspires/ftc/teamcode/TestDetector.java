@@ -1,22 +1,19 @@
  package org.firstinspires.ftc.teamcode;
 
- import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  import com.qualcomm.robotcore.hardware.HardwareMap;
  import com.qualcomm.robotcore.util.ElapsedTime;
 
  import org.firstinspires.ftc.robotcore.external.Telemetry;
- import org.firstinspires.ftc.teamcode.autonomous.AutoDot;
-// import org.firstinspires.ftc.teamcode.autonomous.AutoRoute;
+ // import org.firstinspires.ftc.teamcode.autonomous.AutoRoute;
  import org.firstinspires.ftc.teamcode.tfrec.Detector;
  import org.firstinspires.ftc.teamcode.tfrec.classification.Classifier;
 
- import java.util.ArrayList;
  import java.util.List;
 
  public class TestDetector implements Runnable{
      Telemetry telemetry;
-     private Detector tfDetector = null;
+     private Detector tfDetector;
      private HardwareMap hardwareMap;
 
      private boolean isRunning = true;
@@ -27,7 +24,7 @@
      private static Classifier.Model MODEl_TYPE = Classifier.Model.FLOAT_EFFICIENTNET;
      private static final String LABEL_A = "1";
      private static final String LABEL_B = "2";
-//     private static final String LABEL_C = "3";
+     private static final String LABEL_C = "3";
 
      private String result = LABEL_B; //just a default value.
 

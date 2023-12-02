@@ -43,7 +43,7 @@ public class GenericRecognitionTest extends LinearOpMode {
             waitForStart();
 
             // Continue with your autonomous code after the start button is pressed
-//            rf.stopDetection();
+          rf.stopDetection();
             result = rf.getResult();
 
             // run until the end of the match (driver presses STOP)
