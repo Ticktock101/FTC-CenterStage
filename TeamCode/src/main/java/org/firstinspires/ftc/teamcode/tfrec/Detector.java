@@ -207,7 +207,7 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
         }
 
 
-        ((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
+        //((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         Log.d(TAG, "SetFragment. Complete");
     }
 

@@ -168,8 +168,8 @@ public class MecanumDrive extends LinearOpMode {
             if (gripClaw)
             {
 
-//                telemetry.addData("right servo position", rightClaw.getPosition());
-//                telemetry.addData("left servo position", leftClaw.getPosition());
+                telemetry.addData("right servo position", rightClaw.getPosition());
+                telemetry.addData("left servo position", leftClaw.getPosition());
 
                 telemetry.update();
                 rightClaw.setPosition(0);
@@ -178,7 +178,7 @@ public class MecanumDrive extends LinearOpMode {
             else
             {
                 telemetry.addData("right servo position", rightClaw.getPosition());
-//                telemetry.addData("left servo position", leftClaw.getPosition());
+                telemetry.addData("left servo position", leftClaw.getPosition());
 
                 telemetry.update();
 

@@ -63,14 +63,15 @@
                      telemetry.addData("Nada", "No results");
                  } else {
                      for (Classifier.Recognition r : results) {
-                         if (r.getConfidence() >= 0.8) {
+                         if (true) {
+//                         (r.getConfidence() >= 0.1) {
                              telemetry.addData("PrintZone", r.getTitle());
                              if (r.getTitle().contains(LABEL_B)) {
                                  this.result = LABEL_B;
                              }
-//                             else if(r.getTitle().contains(LABEL_B)){
-//                                 this.result = LABEL_B;
-//                             }
+                             else if(r.getTitle().contains(LABEL_B)){
+                                 this.result = LABEL_B;
+                             }
                              else if(r.getTitle().contains(LABEL_A)){
                                  this.result = LABEL_A;
                              }

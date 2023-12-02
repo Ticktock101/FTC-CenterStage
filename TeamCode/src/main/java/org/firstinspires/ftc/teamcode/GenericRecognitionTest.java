@@ -45,11 +45,12 @@ public class GenericRecognitionTest extends LinearOpMode {
 //            waitForStart();
 
             // Continue with your autonomous code after the start button is pressed
-          rf.stopDetection();
-            result = rf.getResult();
+          //rf.stopDetection();
+
 
             // run until the end of the match (driver presses STOP)
             while (opModeIsActive()) {
+                result = rf.getResult();
                 telemetry.addData("Result", result);
                 telemetry.update();
             }
