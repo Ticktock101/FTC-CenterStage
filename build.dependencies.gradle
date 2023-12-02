@@ -27,6 +27,9 @@ dependencies {
     implementation('org.tensorflow:tensorflow-lite-support:0.0.0-nightly') { changing = true }
 
     //Roadrunner Implementation
-    implementation('com.acmerobotics.dashboard:dashboard:0.4.14')
+    implementation('com.acmerobotics.dashboard:dashboard:0.4.14') {
+        exclude group: 'org.firstinspires.ftc'
+    }
+
     implementation('com.acmerobotics.roadrunner:core:0.5.6')
 }

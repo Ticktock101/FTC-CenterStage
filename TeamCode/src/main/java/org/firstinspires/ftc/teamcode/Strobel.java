@@ -88,8 +88,6 @@ public class Strobel extends LinearOpMode {
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
-
-
     }
 
     private void driveThrottle(double strength, double time) {

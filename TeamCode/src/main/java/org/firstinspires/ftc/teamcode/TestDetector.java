@@ -6,15 +6,14 @@
  import com.qualcomm.robotcore.util.ElapsedTime;
 
  import org.firstinspires.ftc.robotcore.external.Telemetry;
- //import org.firstinspires.ftc.teamcode.autonomous.AutoDot;
- //import org.firstinspires.ftc.teamcode.autonomous.AutoRoute;
+ import org.firstinspires.ftc.teamcode.autonomous.AutoDot;
+// import org.firstinspires.ftc.teamcode.autonomous.AutoRoute;
  import org.firstinspires.ftc.teamcode.tfrec.Detector;
  import org.firstinspires.ftc.teamcode.tfrec.classification.Classifier;
 
  import java.util.ArrayList;
  import java.util.List;
 
- @Autonomous(name = "TestDetector")
  public class TestDetector implements Runnable{
      Telemetry telemetry;
      private Detector tfDetector = null;
@@ -23,12 +22,12 @@
      private boolean isRunning = true;
 
 
-     private String modelFileName = "model_unquant.tflite";//"croppedRingRec.tflite";
+     private String modelFileName = "vww_96_grayscale_quantized.tflite";//"croppedRingRec.tflite";
      private String labelFileName = "labels.txt";//"croppedLabels.txt";
      private static Classifier.Model MODEl_TYPE = Classifier.Model.FLOAT_EFFICIENTNET;
      private static final String LABEL_A = "1";
      private static final String LABEL_B = "2";
-     private static final String LABEL_C = "3";
+//     private static final String LABEL_C = "3";
 
      private String result = LABEL_B; //just a default value.
 
@@ -69,12 +68,12 @@
                      for (Classifier.Recognition r : results) {
                          if (r.getConfidence() >= 0.8) {
                              telemetry.addData("PrintZone", r.getTitle());
-                             if (r.getTitle().contains(LABEL_C)) {
-                                 this.result = LABEL_C;
-                             }
-                             else if(r.getTitle().contains(LABEL_B)){
+                             if (r.getTitle().contains(LABEL_B)) {
                                  this.result = LABEL_B;
                              }
+//                             else if(r.getTitle().contains(LABEL_B)){
+//                                 this.result = LABEL_B;
+//                             }
                              else if(r.getTitle().contains(LABEL_A)){
                                  this.result = LABEL_A;
                              }
