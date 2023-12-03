@@ -54,12 +54,20 @@ public class RedAuto extends LinearOpMode {
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
 
         // Reverse stuff
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightArm1.setDirection(DcMotorSimple.Direction.REVERSE);
         leftArm1.setDirection(DcMotor.Direction.FORWARD);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wristMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set the drive motor run modes:
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -80,6 +88,7 @@ public class RedAuto extends LinearOpMode {
         waitForStart();
 
         moveForward(3, slow);
+        turnClockwise(90, slow);
     }
 
     private void moveForward(int howMuch, double speed) {
