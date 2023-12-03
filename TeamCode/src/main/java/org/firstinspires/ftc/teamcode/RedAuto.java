@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
 // import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -30,13 +31,15 @@ public class RedAuto extends LinearOpMode {
 
     // drive motor position variables
     private int lfPos; private int rfPos; private int lrPos; private int rrPos;
+    //subsystem position variables
+    private int laPos; private int raPos; private int wmPos;
 
     // operational constants
     private double fast = 0.5; // Limit motor power to this value for Andymark RUN_USING_ENCODER mode
     private double medium = 0.3; // medium speed
     private double slow = 0.1; // slow speed
-    private double clicksPerInch = 87.5; // empirically measured
-    private double clicksPerDeg = 21.94; // empirically measured
+    private double clicksPerInch = 50.238; // empirically measured
+    private double clicksPerDeg = 13.55; // empirically measured
     private double lineThreshold = 0.7; // floor should be below this value, line above
     private double redThreshold = 1.9; // red should be below this value, blue above
 
@@ -84,15 +87,45 @@ public class RedAuto extends LinearOpMode {
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wristMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
 
-        moveForward(3, slow);
-        turnClockwise(90, slow);
+        turnClockwise(45, medium);
     }
+    //moves th arm dependng on what angle wanted and what speed
+    /** TODO: Test, fix angle **/
+    private void moveArm(int whatAngle, double speed){
+        // fetch motor position
+        raPos = rightArm1.getCurrentPosition();
+        laPos = leftArm1.getCurrentPosition();
 
+        //calculate new targets
+        raPos += whatAngle * clicksPerDeg;
+        laPos += whatAngle * clicksPerDeg;
+
+        // move arm to desired position
+        rightArm1.setTargetPosition(raPos);
+        leftArm1.setTargetPosition(laPos);
+        rightArm1.setPower(speed);
+        leftArm1.setPower(speed);
+
+        // wait for move to complete
+        while (leftFront.isBusy() && rightFront.isBusy() &&
+                leftBack.isBusy() && rightBack.isBusy()) {
+
+            // Display it for the driver.
+            telemetry.addLine("Move Foward");
+            telemetry.addData("Target", "%7d :%7d", raPos, laPos);
+            telemetry.addData("Actual", "%7d :%7d", rightArm1.getCurrentPosition(), leftArm1.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        rightArm1.setPower(0);
+        leftArm1.setPower(0);
+    }
     private void moveForward(int howMuch, double speed) {
-        // howMuch is in inches. A negative howMuch moves backward.
 
         // fetch motor positions
         lfPos = leftFront.getCurrentPosition();
@@ -134,52 +167,6 @@ public class RedAuto extends LinearOpMode {
         rightFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
-    }
-
-    private void moveRight(int howMuch, double speed) {
-        // howMuch is in inches. A negative howMuch moves backward.
-
-        // fetch motor positions
-        lfPos = leftFront.getCurrentPosition();
-        rfPos = rightFront.getCurrentPosition();
-        lrPos = leftBack.getCurrentPosition();
-        rrPos = rightBack.getCurrentPosition();
-
-        // calculate new targets
-        lfPos += howMuch * clicksPerInch;
-        rfPos -= howMuch * clicksPerInch;
-        lrPos -= howMuch * clicksPerInch;
-        rrPos += howMuch * clicksPerInch;
-
-        // move robot to new position
-        leftFront.setTargetPosition(lfPos);
-        rightFront.setTargetPosition(rfPos);
-        leftBack.setTargetPosition(lrPos);
-        rightBack.setTargetPosition(rrPos);
-        leftFront.setPower(speed);
-        rightFront.setPower(speed);
-        leftBack.setPower(speed);
-        rightBack.setPower(speed);
-
-        // wait for move to complete
-        while (leftFront.isBusy() && rightFront.isBusy() &&
-                leftBack.isBusy() && rightBack.isBusy()) {
-
-            // Display it for the driver.
-            telemetry.addLine("Strafe Right");
-            telemetry.addData("Target", "%7d :%7d", lfPos, rfPos, lrPos, rrPos);
-            telemetry.addData("Actual", "%7d :%7d", leftFront.getCurrentPosition(),
-                    rightFront.getCurrentPosition(), leftBack.getCurrentPosition(),
-                    rightBack.getCurrentPosition());
-            telemetry.update();
-        }
-
-        // Stop all motion;
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-
     }
 
     private void turnClockwise(int whatAngle, double speed) {
@@ -225,38 +212,5 @@ public class RedAuto extends LinearOpMode {
         rightFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
-    }
-    private void moveToLine(int howMuch, double speed) {
-        // howMuch is in inches. The robot will stop if the line is found before
-        // this distance is reached. A negative howMuch moves left, positive moves right.
-
-        // fetch motor positions
-        lfPos = leftFront.getCurrentPosition();
-        rfPos = rightFront.getCurrentPosition();
-        lrPos = leftBack.getCurrentPosition();
-        rrPos = rightBack.getCurrentPosition();
-
-        // calculate new targets
-        lfPos += howMuch * clicksPerInch;
-        rfPos -= howMuch * clicksPerInch;
-        lrPos -= howMuch * clicksPerInch;
-        rrPos += howMuch * clicksPerInch;
-
-        // move robot to new position
-        leftFront.setTargetPosition(lfPos);
-        rightFront.setTargetPosition(rfPos);
-        leftBack.setTargetPosition(lrPos);
-        rightBack.setTargetPosition(rrPos);
-        leftFront.setPower(speed);
-        rightFront.setPower(speed);
-        leftBack.setPower(speed);
-        rightBack.setPower(speed);
-
-        // Stop all motion;
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-
     }
 }
