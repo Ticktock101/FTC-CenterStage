@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.tfrec;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -23,6 +22,7 @@ import android.view.Surface;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -67,7 +67,9 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
     private List<Classifier.Recognition> lastResults = null;
     private int tfodMonitorViewId = -1;
-    private CameraConnectionFragment fragment;
+    private Fragment fragment;
+
+    private CameraConnectionFragment fragment2;
 
     /** Input image size of the model along x axis. */
     private int imageSizeX;
@@ -204,10 +206,21 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
                             getDesiredPreviewFrameSize(), telemetry);
 
             camera2Fragment.setCamera(this.cameraId);
-            fragment = camera2Fragment;
+            fragment2 = camera2Fragment;
         } else {
-            fragment =
-                    new CameraConnectionFragment(this, onPreviewSizeChosen(getDesiredPreviewFrameSize(), getScreenOrientation()), getLayoutId(), getDesiredPreviewFrameSize(), telemetry);
+            // System.out.println("Actually use"); //temp fix?
+            fragment2 = CameraConnectionFragment.newInstance(
+                    new CameraConnectionFragment.ConnectionCallback() {
+                        @Override
+                        public void onPreviewSizeChosen(final Size size, final int rotation) {
+                            previewHeight = size.getHeight();
+                            previewWidth = size.getWidth();
+                            Detector.this.onPreviewSizeChosen(size, rotation);
+                        }
+                    },
+                    this,
+                    getLayoutId(),
+                    getDesiredPreviewFrameSize(), telemetry);
         }
         ((FragmentActivity)appContext).getSupportFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         //((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();

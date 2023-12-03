@@ -177,7 +177,8 @@ public class CameraConnectionFragment extends Fragment {
             final ConnectionCallback connectionCallback,
             final ImageReader.OnImageAvailableListener imageListener,
             final int layout,
-            final Size inputSize, Telemetry t) {
+            final Size inputSize,
+            Telemetry t) {
         this.cameraConnectionCallback = connectionCallback;
         this.imageListener = imageListener;
         this.layout = layout;
