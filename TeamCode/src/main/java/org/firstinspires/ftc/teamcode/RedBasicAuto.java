@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -35,13 +36,13 @@ public class RedBasicAuto extends LinearOpMode {
     DcMotor leftArm;
     DcMotor rightArm;
 
-//    Servo rightClaw;
-//    Servo leftClaw;
+    Servo rightClaw;
+    Servo leftClaw;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-//        initTfod();
+        initTfod();
 
         rightFront = hardwareMap.get(DcMotor.class, "frontRight");
         rightBack = hardwareMap.get(DcMotor.class, "backRight");
@@ -52,8 +53,8 @@ public class RedBasicAuto extends LinearOpMode {
         rightArm = hardwareMap.get(DcMotor.class, "rightArm");
 
 
-//        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
-//        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
+        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
+        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
 
         waitForStart();
 //

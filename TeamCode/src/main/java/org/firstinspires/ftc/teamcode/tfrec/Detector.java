@@ -26,6 +26,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.tfrec.classification.Classifier;
 import org.firstinspires.ftc.teamcode.tfrec.classification.Classifier.Device;
@@ -34,6 +36,9 @@ import org.firstinspires.ftc.teamcode.tfrec.utils.BorderedText;
 import org.firstinspires.ftc.teamcode.tfrec.utils.ImageUtils;
 import org.firstinspires.ftc.teamcode.tfrec.views.CameraConnectionFragment;
 import org.firstinspires.ftc.teamcode.tfrec.views.LegacyCameraConnectionFragment;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+import org.opencv.android.CameraActivity;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -67,9 +72,9 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
     private List<Classifier.Recognition> lastResults = null;
     private int tfodMonitorViewId = -1;
-    private Fragment fragment;
-
-    private CameraConnectionFragment fragment2;
+//    private Fragment fragment;
+    public static final String manager = "android.permission.CAMERA";
+    private CameraConnectionFragment fragment;
 
     /** Input image size of the model along x axis. */
     private int imageSizeX;
@@ -132,8 +137,7 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
             handlerThread = null;
             handler = null;
             if (fragment != null) {
-                ((FragmentActivity)appContext).getSupportFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
-//                ((Activity) appContext).getFragmentManager().beginTransaction().remove(fragment).commit();
+                ((Activity) appContext).getFragmentManager().beginTransaction().remove(fragment).commit();
             }
 
         } catch (final InterruptedException e) {
@@ -206,23 +210,12 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
                             getDesiredPreviewFrameSize(), telemetry);
 
             camera2Fragment.setCamera(this.cameraId);
-            fragment2 = camera2Fragment;
+            fragment = camera2Fragment;
         } else {
-            // System.out.println("Actually use"); //temp fix?
-            fragment2 = CameraConnectionFragment.newInstance(
-                    new CameraConnectionFragment.ConnectionCallback() {
-                        @Override
-                        public void onPreviewSizeChosen(final Size size, final int rotation) {
-                            previewHeight = size.getHeight();
-                            previewWidth = size.getWidth();
-                            Detector.this.onPreviewSizeChosen(size, rotation);
-                        }
-                    },
-                    this,
-                    getLayoutId(),
-                    getDesiredPreviewFrameSize(), telemetry);
+            (Fragment) fragment =
+                    new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize(), telemetry);
         }
-        ((FragmentActivity)appContext).getSupportFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
+        ((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         //((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         Log.d(TAG, "SetFragment. Complete");
     }

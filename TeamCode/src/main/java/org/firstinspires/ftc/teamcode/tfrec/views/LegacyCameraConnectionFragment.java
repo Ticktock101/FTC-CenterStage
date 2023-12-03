@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class LegacyCameraConnectionFragment extends Fragment {
+public class LegacyCameraConnectionFragment extends CameraConnectionFragment {
     /**
      * Conversion from screen rotation to JPEG orientation.
      */
@@ -37,6 +37,8 @@ public class LegacyCameraConnectionFragment extends Fragment {
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+
+    private final Object ConnectionCallback;
 
     private Camera camera;
     private Camera.PreviewCallback imageListener;
@@ -137,8 +139,9 @@ public class LegacyCameraConnectionFragment extends Fragment {
     private HandlerThread backgroundThread;
 
     @SuppressLint("ValidFragment")
-    public LegacyCameraConnectionFragment(
+    public LegacyCameraConnectionFragment(ConnectionCallback,
             final Camera.PreviewCallback imageListener, final int layout, final Size desiredSize, Telemetry t) {
+        this.ConnectionCallback = null;
         this.imageListener = imageListener;
         this.layout = layout;
         this.desiredSize = desiredSize;
