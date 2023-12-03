@@ -173,7 +173,7 @@ public class CameraConnectionFragment extends Fragment {
             };
 
     @SuppressLint("ValidFragment")
-    private CameraConnectionFragment(
+    public CameraConnectionFragment(
             final ConnectionCallback connectionCallback,
             final ImageReader.OnImageAvailableListener imageListener,
             final int layout,

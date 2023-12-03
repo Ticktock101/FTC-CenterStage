@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.params.StreamConfigurationMap;
@@ -66,7 +67,7 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
     private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
     private List<Classifier.Recognition> lastResults = null;
     private int tfodMonitorViewId = -1;
-    private androidx.fragment.app.Fragment fragment;
+    private CameraConnectionFragment fragment;
 
     /** Input image size of the model along x axis. */
     private int imageSizeX;
@@ -129,7 +130,8 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
             handlerThread = null;
             handler = null;
             if (fragment != null) {
-                ((Activity) appContext).getFragmentManager().beginTransaction().remove(fragment).commit();
+                ((FragmentActivity)appContext).getSupportFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
+//                ((Activity) appContext).getFragmentManager().beginTransaction().remove(fragment).commit();
             }
 
         } catch (final InterruptedException e) {
@@ -205,7 +207,7 @@ public class Detector implements ImageReader.OnImageAvailableListener, Camera.Pr
             fragment = camera2Fragment;
         } else {
             fragment =
-                    new LegacyCameraConnectionFragment(this, getLayoutId(), getDesiredPreviewFrameSize(), telemetry);
+                    new CameraConnectionFragment(this, onPreviewSizeChosen(getDesiredPreviewFrameSize(), getScreenOrientation()), getLayoutId(), getDesiredPreviewFrameSize(), telemetry);
         }
         ((FragmentActivity)appContext).getSupportFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
         //((Activity)appContext).getFragmentManager().beginTransaction().replace(tfodMonitorViewId, fragment).commit();
