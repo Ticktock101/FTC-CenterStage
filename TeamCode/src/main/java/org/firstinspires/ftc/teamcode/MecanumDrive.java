@@ -94,6 +94,7 @@ public class MecanumDrive extends LinearOpMode {
             double direction = 0;
             double wristDirection = 0;
             // Ryan Strobel is a legend
+            // Sure...if so, you should make a class for auto that houses our methods so they can be called instead of it all in our auto
             if (!isReset) {
                  direction = rt - lt;
                  if (gamepad1.right_bumper) {wristDirection = 1;}

@@ -55,6 +55,8 @@ public class RedAuto extends LinearOpMode {
         wristMotor = hardwareMap.get(DcMotor.class, "wrist");
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
+        rightClaw = hardwareMap.get(Servo.class, "rightServo");
+        leftClaw = hardwareMap.get(Servo.class, "leftServo");
 
         // Reverse stuff
         rightFront.setDirection(DcMotor.Direction.FORWARD);
@@ -63,7 +65,9 @@ public class RedAuto extends LinearOpMode {
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightArm1.setDirection(DcMotorSimple.Direction.REVERSE);
         leftArm1.setDirection(DcMotor.Direction.FORWARD);
+        rightClaw.setDirection(Servo.Direction.REVERSE);
 
+        // Encoder Stuff
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -92,15 +96,18 @@ public class RedAuto extends LinearOpMode {
         waitForStart();
 
         turnClockwise(45, medium);
+        moveArm(45, medium);
+        moveWrist(20, medium);
     }
     //moves th arm dependng on what angle wanted and what speed
-    /** TODO: Test, fix angle **/
+    /** TODO: Test, fix angle
+     * might need to make new variable clicksPerDeg for arm motor **/
     private void moveArm(int whatAngle, double speed){
         // fetch motor position
         raPos = rightArm1.getCurrentPosition();
         laPos = leftArm1.getCurrentPosition();
 
-        //calculate new targets
+        // calculate new targets
         raPos += whatAngle * clicksPerDeg;
         laPos += whatAngle * clicksPerDeg;
 
@@ -111,11 +118,10 @@ public class RedAuto extends LinearOpMode {
         leftArm1.setPower(speed);
 
         // wait for move to complete
-        while (leftFront.isBusy() && rightFront.isBusy() &&
-                leftBack.isBusy() && rightBack.isBusy()) {
+        while (rightArm1.isBusy() && leftArm1.isBusy()) {
 
             // Display it for the driver.
-            telemetry.addLine("Move Foward");
+            telemetry.addLine("Arm Moved");
             telemetry.addData("Target", "%7d :%7d", raPos, laPos);
             telemetry.addData("Actual", "%7d :%7d", rightArm1.getCurrentPosition(), leftArm1.getCurrentPosition());
             telemetry.update();
@@ -125,6 +131,41 @@ public class RedAuto extends LinearOpMode {
         rightArm1.setPower(0);
         leftArm1.setPower(0);
     }
+
+    /** TODO: Test, fix angle
+     * might need to make new variable clicksPerDeg for wrist motor **/
+    private void moveWrist(int whatAngle, double speed) {
+        // fetch motor positions
+        wristMotor.getCurrentPosition();
+
+        // calculate new targets
+        wmPos += whatAngle * clicksPerDeg;
+
+        // move arm to desired position
+        wristMotor.setTargetPosition(wmPos);
+        wristMotor.setPower(speed);
+
+        // wait for move to complete
+        while (wristMotor.isBusy()){
+
+            // Display it for the driver.
+            telemetry.addLine("Wrist Moved");
+            telemetry.addData("Target", "%7d :%7d", wmPos);
+            telemetry.addData("Actual", "%7d :%7d", wristMotor.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        wristMotor.setPower(0);
+    }
+
+    /** TODO: Test, add things?
+     * might need to reverse or put in negative for position variable **/
+    private void clawMov(double position) {
+        rightClaw.setPosition(position);
+        leftClaw.setPosition(position);
+    }
+
     private void moveForward(int howMuch, double speed) {
 
         // fetch motor positions
