@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -44,6 +46,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
+import java.util.Timer;
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
@@ -70,6 +73,17 @@ public class BlueAuto extends LinearOpMode {
 
     double targetArmHeight = 0;
 
+    private int lfPos; private int rfPos; private int lrPos; private int rrPos;
+
+    // operational constants
+    private double fast = 0.5; // Limit motor power to this value for Andymark RUN_USING_ENCODER mode
+    private double medium = 0.3; // medium speed
+    private double slow = 0.1; // slow speed
+    private double clicksPerInch = 50.238; // empirically measured
+    private double clicksPerDeg = 13.55; // empirically measured
+    private double lineThreshold = 0.7; // floor should be below this value, line above
+    private double redThreshold = 1.9; // red should be below this value, blue above
+
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
@@ -88,6 +102,15 @@ public class BlueAuto extends LinearOpMode {
      */
     private TfodProcessor tfod;
 
+    private int position = 2;
+    private int count = 0;
+
+    private boolean isFound = false;
+
+    private int countFalse = 0;
+    private int laPos; private int raPos;
+
+
     /**
      * The variable to store our instance of the vision portal.
      */
@@ -102,20 +125,24 @@ public class BlueAuto extends LinearOpMode {
         wristMotor = hardwareMap.get(DcMotor.class, "wrist");
         wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+//        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+//        setZeroPosition();
 
 
 
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
-        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -124,6 +151,38 @@ public class BlueAuto extends LinearOpMode {
         rightClaw = hardwareMap.get(Servo.class, "rightServo");
         leftClaw = hardwareMap.get(Servo.class, "leftServo");
         rightClaw.setDirection(Servo.Direction.REVERSE);
+
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        rightArm1.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftArm1.setDirection(DcMotor.Direction.FORWARD);
+
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+//        wristMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Set the drive motor run modes:
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        wristMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        leftArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         initTfod();
 
@@ -136,17 +195,59 @@ public class BlueAuto extends LinearOpMode {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 
-                telemetryTfod();
 
-                // Push telemetry to the Driver Station.
-                telemetry.update();
+//                telemetryTfod();
 
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
+//
+                ElapsedTime myLoopTimer = new ElapsedTime();
+
+                while (count == 0)
+                {
+
+                    while (myLoopTimer.time() < 5 && !telemetryTfod())
+                    {
+                        telemetryTfod();
+                    }
+
+                    if (position == 0)
+                    {
+                        moveForward(5, medium);
+                        turnClockwise(-8, 0.5);
+                        moveForward(5, medium);
+                    }
+
+                    else if (position == 1)
+                    {
+                        moveForward(14, medium);
+                    }
+                    else
+                    {
+                        moveForward(5, medium);
+                        turnClockwise(8, 0.5);
+                        moveForward(5, medium);
+                    }
+
+
+                    count++;
                 }
+//
+//                // Push telemetry to the Driver Station.
+//                telemetry.update();
+//
+//                // Save CPU resources; can resume streaming when needed.
+//                if (gamepad1.dpad_down) {
+//                    visionPortal.stopStreaming();
+//                } else if (gamepad1.dpad_up) {
+//                    visionPortal.resumeStreaming();
+//                }
+//
+//                if (position == 0)
+//                {
+//                    moveForward(10, medium);
+//                    telemetry.addData("position", position);
+//                }
+
+//                turnRight();
 
                 // Share the CPU.
                 sleep(20);
@@ -225,7 +326,8 @@ public class BlueAuto extends LinearOpMode {
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
-    private void telemetryTfod() {
+    private boolean telemetryTfod() {
+//        sleep(200);
 
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
@@ -237,27 +339,261 @@ public class BlueAuto extends LinearOpMode {
 
             telemetry.addData(""," ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
+            telemetry.addData("X position : ", x);
+            telemetry.addData("Y position", y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
 
             if (x < 100)
             {
-
+                position = 0;
+                return true;
             }
+            else if (x > 300)
+            {
+                position = 1;
+                return true;
+            }
+
+
         }   // end for() loop
 
+//        if(currentRecognitions.size() == 0)
+//        {
+//            position = 2;
+//            return true;
+//        }
 
 
+        return false;
     }   // end method telemetryTfod()
 
-    public void turnRight()
-    {
+    private void moveArm(int whatAngle, double speed){
+        // fetch motor position
+        raPos = rightArm1.getCurrentPosition();
+        laPos = leftArm1.getCurrentPosition();
+
+        // calculate new targets
+        raPos += whatAngle * clicksPerDeg;
+        laPos += whatAngle * clicksPerDeg;
+
+        // move arm to desired position
+        rightArm1.setTargetPosition(raPos);
+        leftArm1.setTargetPosition(laPos);
+        rightArm1.setPower(speed);
+        leftArm1.setPower(speed);
+
+        // wait for move to complete
+        while (rightArm1.isBusy() && leftArm1.isBusy()) {
+
+            // Display it for the driver.
+            telemetry.addLine("Arm Moved");
+            telemetry.addData("Target", "%7d :%7d", raPos, laPos);
+            telemetry.addData("Actual", "%7d :%7d", rightArm1.getCurrentPosition(), leftArm1.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        rightArm1.setPower(0);
+        leftArm1.setPower(0);
+    }
+
+    private void moveForward(int howMuch, double speed) {
+        // howMuch is in inches. A negative howMuch moves backward.
+
+        setZeroPosition();
+
+        // fetch motor positions
+        lfPos = leftFront.getCurrentPosition();
+        rfPos = rightFront.getCurrentPosition();
+        lrPos = leftBack.getCurrentPosition();
+        rrPos = rightBack.getCurrentPosition();
+
+        // calculate new targets
+        lfPos += howMuch * clicksPerInch;
+        rfPos += howMuch * clicksPerInch;
+        lrPos += howMuch * clicksPerInch;
+        rrPos += howMuch * clicksPerInch;
+
+        // move robot to new position
+        leftFront.setTargetPosition(lfPos);
+        rightFront.setTargetPosition(rfPos);
+        leftBack.setTargetPosition(lrPos);
+        rightBack.setTargetPosition(rrPos);
+
+
+
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        leftArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+
+        // wait for move to complete
+        while (leftFront.isBusy() && rightFront.isBusy() &&
+                leftBack.isBusy() && rightBack.isBusy()) {
+
+            // Display it for the driver.
+            telemetry.addLine("Move Foward");
+            telemetry.addData("Target", "%7d :%7d", lfPos, rfPos, lrPos, rrPos);
+            telemetry.addData("Actual", "%7d :%7d", leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition(), leftBack.getCurrentPosition(),
+                    rightBack.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    private void moveRight(int howMuch, double speed) {
+        // howMuch is in inches. A negative howMuch moves backward.
+
+        setZeroPosition();
+
+        // fetch motor positions
+        lfPos = leftFront.getCurrentPosition();
+        rfPos = rightFront.getCurrentPosition();
+        lrPos = leftBack.getCurrentPosition();
+        rrPos = rightBack.getCurrentPosition();
+
+        // calculate new targets
+        lfPos += howMuch * clicksPerInch;
+        rfPos -= howMuch * clicksPerInch;
+        lrPos -= howMuch * clicksPerInch;
+        rrPos += howMuch * clicksPerInch;
+
+        // move robot to new position
+        leftFront.setTargetPosition(lfPos);
+        rightFront.setTargetPosition(rfPos);
+        leftBack.setTargetPosition(lrPos);
+        rightBack.setTargetPosition(rrPos);
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
+
+        // wait for move to complete
+        while (leftFront.isBusy() && rightFront.isBusy() &&
+                leftBack.isBusy() && rightBack.isBusy()) {
+
+            // Display it for the driver.
+            telemetry.addLine("Strafe Right");
+            telemetry.addData("Target", "%7d :%7d", lfPos, rfPos, lrPos, rrPos);
+            telemetry.addData("Actual", "%7d :%7d", leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition(), leftBack.getCurrentPosition(),
+                    rightBack.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+    }
+
+    private void turnClockwise(int whatAngle, double speed) {
+        // whatAngle is in degrees. A negative whatAngle turns counterclockwise.
+
+        // fetch motor positions
+        lfPos = leftFront.getCurrentPosition();
+        rfPos = rightFront.getCurrentPosition();
+        lrPos = leftBack.getCurrentPosition();
+        rrPos = rightBack.getCurrentPosition();
+
+        // calculate new targets
+        lfPos += whatAngle * clicksPerDeg;
+        rfPos -= whatAngle * clicksPerDeg;
+        lrPos += whatAngle * clicksPerDeg;
+        rrPos -= whatAngle * clicksPerDeg;
+
+        // move robot to new position
+        leftFront.setTargetPosition(lfPos);
+        rightFront.setTargetPosition(rfPos);
+        leftBack.setTargetPosition(lrPos);
+        rightBack.setTargetPosition(rrPos);
+
+
+
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
+
+
+
+        // wait for move to complete
+        while (leftFront.isBusy() && rightFront.isBusy() &&
+                leftBack.isBusy() && rightBack.isBusy()) {
+
+            // Display it for the driver.
+            telemetry.addLine("Turn Clockwise");
+            telemetry.addData("Target", "%7d :%7d", lfPos, rfPos, lrPos, rrPos);
+            telemetry.addData("Actual", "%7d :%7d", leftFront.getCurrentPosition(),
+                    rightFront.getCurrentPosition(), leftBack.getCurrentPosition(),
+                    rightBack.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+    }
+    private void moveToLine(int howMuch, double speed) {
+        // howMuch is in inches. The robot will stop if the line is found before
+        // this distance is reached. A negative howMuch moves left, positive moves right.
+
+        // fetch motor positions
+        lfPos = leftFront.getCurrentPosition();
+        rfPos = rightFront.getCurrentPosition();
+        lrPos = leftBack.getCurrentPosition();
+        rrPos = rightBack.getCurrentPosition();
+
+        // calculate new targets
+        lfPos += howMuch * clicksPerInch;
+        rfPos -= howMuch * clicksPerInch;
+        lrPos -= howMuch * clicksPerInch;
+        rrPos += howMuch * clicksPerInch;
+
+        // move robot to new position
+        leftFront.setTargetPosition(lfPos);
+        rightFront.setTargetPosition(rfPos);
+        leftBack.setTargetPosition(lrPos);
+        rightBack.setTargetPosition(rrPos);
+        leftFront.setPower(speed);
+        rightFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightBack.setPower(speed);
+
+        // Stop all motion;
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
 
     }
 
     public void setZeroPosition()
     {
-        rightFront.setTargetPosition();
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
 }   // end class

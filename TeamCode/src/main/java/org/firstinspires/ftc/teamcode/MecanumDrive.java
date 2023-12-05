@@ -30,6 +30,10 @@ public class MecanumDrive extends LinearOpMode {
     DcMotor leftArm1;
     DcMotor wristMotor;
 
+    DcMotor slide;
+
+    Servo airplane;
+
     double targetArmHeight = 0;
 
 //    BHI260IMU imu;
@@ -46,7 +50,10 @@ public class MecanumDrive extends LinearOpMode {
         leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotor.class, "backLeft");
         wristMotor = hardwareMap.get(DcMotor.class, "wrist");
+        slide = hardwareMap.get(DcMotor.class, "slide");
+
         wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
@@ -59,7 +66,10 @@ public class MecanumDrive extends LinearOpMode {
 
         rightClaw = hardwareMap.get(Servo.class, "rightServo");
         leftClaw = hardwareMap.get(Servo.class, "leftServo");
-        rightClaw.setDirection(Servo.Direction.REVERSE);
+        leftClaw.setDirection(Servo.Direction.REVERSE);
+
+        airplane = hardwareMap.get(Servo.class, "planeLauncher");
+        airplane.setDirection(Servo.Direction.REVERSE);
 
 
         waitForStart();
@@ -202,6 +212,16 @@ public class MecanumDrive extends LinearOpMode {
                 leftArm1.setTargetPosition(armLeftStart);
                 isReset = true;
 
+            }
+
+            if(gamepad2.right_trigger - gamepad2.left_trigger != 0)
+            {
+                slide.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+            }
+
+            if (gamepad2.a)
+            {
+                airplane.setPosition(0);
             }
 
 
