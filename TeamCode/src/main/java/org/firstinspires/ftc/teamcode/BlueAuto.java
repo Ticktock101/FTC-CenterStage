@@ -90,7 +90,7 @@ public class BlueAuto extends LinearOpMode {
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "blue-pyramid.tflite";
+    private static final String TFOD_MODEL_ASSET = "BluePyramidv2.tflite";
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
 //    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/myCustomModel.tflite";
@@ -146,8 +146,8 @@ public class BlueAuto extends LinearOpMode {
 //        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         rightClaw = hardwareMap.get(Servo.class, "rightServo");
@@ -161,6 +161,7 @@ public class BlueAuto extends LinearOpMode {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
+
         rightArm1.setDirection(DcMotorSimple.Direction.REVERSE);
         leftArm1.setDirection(DcMotor.Direction.FORWARD);
 
@@ -224,13 +225,18 @@ public class BlueAuto extends LinearOpMode {
 
 
 
-                        pixelPush.setPosition(0);
+                        ElapsedTime newTimer = new ElapsedTime();
 
-                        sleep(500);
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
+//                        sleep(500);
 
                         moveForward(-5, medium);
-                        turnClockwise(-30, 0.5);
-                        moveForward(15, medium);
+                        turnClockwise(-50, 0.5);
+                        moveForward(20, medium);
 //
 //
 //
@@ -252,7 +258,7 @@ public class BlueAuto extends LinearOpMode {
 //
 //
 //
-////                        moveArm(20, 0.5);
+//                        moveArm(20, 0.5);
 //
 ////                        turnClockwise(5, 0.5);
 //                        moveForward(4, medium);
@@ -270,6 +276,8 @@ public class BlueAuto extends LinearOpMode {
                         moveForward(7, medium);
 
                         pixelPush.setPosition(0);
+
+
                     }
 
 
@@ -303,6 +311,13 @@ public class BlueAuto extends LinearOpMode {
         visionPortal.close();
 
     }   // end runOpMode()
+
+    public void moveServo()
+    {
+        pixelPush.setPosition(0);
+
+        sleep(400);
+    }
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -426,6 +441,9 @@ public class BlueAuto extends LinearOpMode {
         leftArm1.setTargetPosition(laPos);
         rightArm1.setPower(speed);
         leftArm1.setPower(speed);
+
+        rightArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // wait for move to complete
         while (rightArm1.isBusy() && leftArm1.isBusy()) {

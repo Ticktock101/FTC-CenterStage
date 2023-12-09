@@ -224,10 +224,19 @@ public class RedBasicAuto extends LinearOpMode {
 //                        pixelPush.setPosition(0);
 
                         moveForward(22, medium);
-                        turnClockwise(-40, 0.5);
+                        turnClockwise(-38, 0.5);
 //                        moveForward(7, medium);
 
-                        pixelPush.setPosition(0);
+//                        pixelPush.setPosition(0);
+                        ElapsedTime newTimer = new ElapsedTime();
+
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
+
+                        moveForward(-5, medium);
 
 //
 //
@@ -259,7 +268,17 @@ public class RedBasicAuto extends LinearOpMode {
                     else if (position == 1)
                     {
                         moveForward(26, medium);
-                        pixelPush.setPosition(0);
+//                        pixelPush.setPosition(0);
+
+                        ElapsedTime newTimer = new ElapsedTime();
+
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
+
+                        moveForward(-5, medium);
                     }
                     else
                     {
@@ -270,12 +289,20 @@ public class RedBasicAuto extends LinearOpMode {
 //                        pixelPush.setPosition(0);
 
                         moveForward(12, medium);
-                        turnClockwise(12, 0.5);
+                        turnClockwise(10, 0.5);
                         moveForward(4, medium);
 
-                        pixelPush.setPosition(0);
+                        ElapsedTime newTimer = new ElapsedTime();
 
-                        moveArm(10, medium);
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
+
+                        moveForward(-5, medium);
+
+//                        moveArm(10, medium);
                     }
 
 
@@ -309,6 +336,13 @@ public class RedBasicAuto extends LinearOpMode {
         visionPortal.close();
 
     }   // end runOpMode()
+
+    public void moveServo()
+    {
+        pixelPush.setPosition(0);
+
+        sleep(400);
+    }
 
     /**
      * Initialize the TensorFlow Object Detection processor.

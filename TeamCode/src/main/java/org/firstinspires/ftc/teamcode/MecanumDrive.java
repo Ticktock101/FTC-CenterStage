@@ -81,6 +81,8 @@ public class MecanumDrive extends LinearOpMode {
 
         int wristStart = wristMotor.getCurrentPosition();
 
+        telemetry.addData("right arm position", armRightStart);
+
 
         boolean gripClaw = true;
         boolean aButtonUpdate = false;
@@ -97,8 +99,8 @@ public class MecanumDrive extends LinearOpMode {
             int rightPosition = rightArm1.getCurrentPosition();
             int leftPosition = leftArm1.getCurrentPosition();
 
-            telemetry.addData("wrist start", wristStart);
-            telemetry.addData("wrist curr", wristMotor.getCurrentPosition());
+//            telemetry.addData("wrist start", wristStart);
+//            telemetry.addData("wrist curr", wristMotor.getCurrentPosition());
 
 
             double direction = 0;
@@ -112,7 +114,7 @@ public class MecanumDrive extends LinearOpMode {
                  else {wristDirection = 0;};
             }
             else {
-                direction = -1 * (rightArm1.getCurrentPosition() - armRightStart);
+                direction = -1 * (rightArm1.getCurrentPosition() - (-6));
                 wristDirection = (wristMotor.getCurrentPosition() - wristStart);
                 if (Math.abs(direction) < 10) {
                     isReset = false;
@@ -147,6 +149,7 @@ public class MecanumDrive extends LinearOpMode {
 
             telemetry.addData( "left claw position", leftClaw.getPosition());
             telemetry.addData( "right claw position", rightClaw.getPosition());
+            telemetry.addData("right arm position", rightPosition);
 
             telemetry.update();
 
@@ -154,10 +157,10 @@ public class MecanumDrive extends LinearOpMode {
             double wheelSpeed = 0.5; //0.0 - 1
 
 
-            leftFront.setPower(-(y + x + rx) * wheelSpeed);
-            leftBack.setPower(-(y - x + rx) * wheelSpeed);
-            rightFront.setPower((y - x - rx) * wheelSpeed);
-            rightBack.setPower((y + x - rx) * wheelSpeed);
+            leftFront.setPower(-(y + x + rx));
+            leftBack.setPower(-(y - x + rx) );
+            rightFront.setPower((y - x - rx));
+            rightBack.setPower((y + x - rx) );
 
             if (gamepad1.a) {
                 aButtonUpdate = true;

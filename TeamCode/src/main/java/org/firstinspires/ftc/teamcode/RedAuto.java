@@ -147,8 +147,8 @@ public class RedAuto extends LinearOpMode {
 //        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         rightClaw = hardwareMap.get(Servo.class, "rightServo");
@@ -210,7 +210,7 @@ public class RedAuto extends LinearOpMode {
                 while (count == 0)
                 {
 
-                    while (myLoopTimer.time() < 3 && !telemetryTfod())
+                    while (myLoopTimer.time() < 8 && !telemetryTfod())
                     {
                         telemetryTfod();
                     }
@@ -227,9 +227,15 @@ public class RedAuto extends LinearOpMode {
                         turnClockwise(-40, 0.5);
 //                        moveForward(7, medium);
 
+                        ElapsedTime newTimer = new ElapsedTime();
 
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
 
-                        pixelPush.setPosition(0);
+                        }
+                        turnClockwise(-30, medium);
+                        moveForward(-30, medium);
 
 
 
@@ -263,31 +269,47 @@ public class RedAuto extends LinearOpMode {
                     else if (position == 1)
                     {
                         moveForward(26, medium);
-                        pixelPush.setPosition(0);
+
+                        ElapsedTime newTimer = new ElapsedTime();
+
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
+
+                        turnClockwise(40, medium);
+                        moveForward(20, medium);
+
                     }
                     else
                     {
 //
-//                        moveForward(12, medium);
-//                        turnClockwise(12, 0.5);
-//                        moveForward(4, medium);
-//
+                        moveForward(12, medium);
+                        turnClockwise(12, 0.5);
+                        moveForward(4, medium);
+
 //                        sleep(400);
-//
-//                        pixelPush.setPosition(0);
-//
-//                        sleep(1000);
+
+
+                        ElapsedTime newTimer = new ElapsedTime();
+
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
 
 //                        wait(400);
 
-//                        moveForward(-10, medium);
-//                        turnClockwise(30, 0.5);
-//                        moveForward(30, medium);
+                        moveForward(-10, medium);
+                        turnClockwise(50, 0.5);
+                        moveForward(30, medium);
 
 //                        moveArm(10, medium);
 
-                        rightArm1.setPower(-0.5);
-                        leftArm1.setPower(0.5);
+//                        rightArm1.setPower(-0.5);
+//                        leftArm1.setPower(0.5);
                     }
 
 
@@ -322,6 +344,13 @@ public class RedAuto extends LinearOpMode {
         visionPortal.close();
 
     }   // end runOpMode()
+
+    public void moveServo()
+    {
+        pixelPush.setPosition(0);
+
+        sleep(400);
+    }
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -448,6 +477,9 @@ public class RedAuto extends LinearOpMode {
         leftArm1.setTargetPosition(laPos);
         rightArm1.setPower(speed);
         leftArm1.setPower(speed);
+
+        rightArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // wait for move to complete
         while (rightArm1.isBusy() && leftArm1.isBusy()) {
