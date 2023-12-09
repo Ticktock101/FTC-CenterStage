@@ -179,8 +179,8 @@ public class RedAuto extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        wristMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 //        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -210,7 +210,7 @@ public class RedAuto extends LinearOpMode {
                 while (count == 0)
                 {
 
-                    while (myLoopTimer.time() < 8 && !telemetryTfod())
+                    while (myLoopTimer.time() < 3 && !telemetryTfod())
                     {
                         telemetryTfod();
                     }
@@ -267,28 +267,29 @@ public class RedAuto extends LinearOpMode {
                     }
                     else
                     {
-//                        moveForward(10, medium);
-//                        turnClockwise(13, 0.5);
-//                        moveForward(7, medium);
+//
+//                        moveForward(12, medium);
+//                        turnClockwise(12, 0.5);
+//                        moveForward(4, medium);
+//
+//                        sleep(400);
 //
 //                        pixelPush.setPosition(0);
-
-                        moveForward(12, medium);
-                        turnClockwise(12, 0.5);
-                        moveForward(4, medium);
-
-                        sleep(400);
-
-                        pixelPush.setPosition(0);
-
-                        sleep(1000);
+//
+//                        sleep(1000);
 
 //                        wait(400);
 
-                        moveForward(-10, medium);
-                        turnClockwise(30, 0.5);
-                        moveForward(30, medium);
+//                        moveForward(-10, medium);
+//                        turnClockwise(30, 0.5);
+//                        moveForward(30, medium);
+
+//                        moveArm(10, medium);
+
+                        rightArm1.setPower(-0.5);
+                        leftArm1.setPower(0.5);
                     }
+
 
 
                     count++;
@@ -431,6 +432,9 @@ public class RedAuto extends LinearOpMode {
     }   // end method telemetryTfod()
 
     private void moveArm(int whatAngle, double speed){
+
+        setZeroPosition();
+
         // fetch motor position
         raPos = rightArm1.getCurrentPosition();
         laPos = leftArm1.getCurrentPosition();
