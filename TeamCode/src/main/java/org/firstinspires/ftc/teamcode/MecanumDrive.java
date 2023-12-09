@@ -215,9 +215,17 @@ public class MecanumDrive extends LinearOpMode {
 
             }
 
-            if(gamepad2.right_trigger - gamepad2.left_trigger != 0)
+            if(gamepad2.dpad_up)
             {
-                slide.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+                slide.setPower(0.5);
+            }
+
+            else if(gamepad2.dpad_down)
+            {
+                slide.setPower(-0.5);
+            }
+            else {
+                slide.setPower(0);
             }
 
             if (gamepad2.a)

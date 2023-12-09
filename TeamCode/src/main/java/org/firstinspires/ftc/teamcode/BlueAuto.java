@@ -73,6 +73,8 @@ public class BlueAuto extends LinearOpMode {
 
     double targetArmHeight = 0;
 
+    Servo pixelPush;
+
     private int lfPos; private int rfPos; private int lrPos; private int rrPos;
 
     // operational constants
@@ -152,6 +154,9 @@ public class BlueAuto extends LinearOpMode {
         leftClaw = hardwareMap.get(Servo.class, "leftServo");
         rightClaw.setDirection(Servo.Direction.REVERSE);
 
+        pixelPush = hardwareMap.get(Servo.class, "pixel");
+        pixelPush.setDirection(Servo.Direction.REVERSE);
+
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
@@ -173,8 +178,8 @@ public class BlueAuto extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        wristMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 //        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -204,27 +209,67 @@ public class BlueAuto extends LinearOpMode {
                 while (count == 0)
                 {
 
-                    while (myLoopTimer.time() < 5 && !telemetryTfod())
+                    while (myLoopTimer.time() < 8 && !telemetryTfod())
                     {
                         telemetryTfod();
                     }
 
                     if (position == 0)
                     {
-                        moveForward(5, medium);
-                        turnClockwise(-8, 0.5);
-                        moveForward(5, medium);
+                        moveForward(7, medium);
+                        turnClockwise(-18, 0.5);
+                        moveForward(8, medium);
+
+                        sleep(400);
+
+
+
+                        pixelPush.setPosition(0);
+
+                        sleep(500);
+
+                        moveForward(-5, medium);
+                        turnClockwise(-30, 0.5);
+                        moveForward(15, medium);
+//
+//
+//
+//                        turnClockwise(-22, 0.5);
+//                        moveForward(15, medium);
+//
+//
+//                        rightArm1.setPower(0.5);
+//                        leftArm1.setPower(0.5);
+//                        sleep(160);
+//
+//                        rightArm1.setPower(0);
+//                        leftArm1.setPower(0);
+//
+//                        wristMotor.setPower(0.5);
+//                        sleep(25);
+//                        wristMotor.setPower(0);
+//
+//
+//
+//
+////                        moveArm(20, 0.5);
+//
+////                        turnClockwise(5, 0.5);
+//                        moveForward(4, medium);
                     }
 
                     else if (position == 1)
                     {
-                        moveForward(14, medium);
+                        moveForward(25, medium);
+                        pixelPush.setPosition(0);
                     }
                     else
                     {
-                        moveForward(5, medium);
-                        turnClockwise(8, 0.5);
-                        moveForward(5, medium);
+                        moveForward(10, medium);
+                        turnClockwise(13, 0.5);
+                        moveForward(7, medium);
+
+                        pixelPush.setPosition(0);
                     }
 
 
