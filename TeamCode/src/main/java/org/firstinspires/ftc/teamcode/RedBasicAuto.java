@@ -274,6 +274,8 @@ public class RedBasicAuto extends LinearOpMode {
                         moveForward(4, medium);
 
                         pixelPush.setPosition(0);
+
+                        moveArm(10, medium);
                     }
 
 
@@ -430,6 +432,9 @@ public class RedBasicAuto extends LinearOpMode {
         leftArm1.setTargetPosition(laPos);
         rightArm1.setPower(speed);
         leftArm1.setPower(speed);
+
+        rightArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftArm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // wait for move to complete
         while (rightArm1.isBusy() && leftArm1.isBusy()) {
