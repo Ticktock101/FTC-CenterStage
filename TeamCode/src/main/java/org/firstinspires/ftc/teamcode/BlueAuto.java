@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 //package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -55,7 +56,7 @@ import java.util.Timer;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "TensorFlow Blue Auto", group = "Concept")
+@Autonomous(name = " Blue Auto", group = "Concept")
 //@Disabled
 public class BlueAuto extends LinearOpMode {
 
@@ -215,11 +216,14 @@ public class BlueAuto extends LinearOpMode {
                         telemetryTfod();
                     }
 
+//                    rightClaw.setPosition(0);
+//                    leftClaw.setPosition(0);
+
                     if (position == 0)
                     {
-                        moveForward(7, medium);
-                        turnClockwise(-18, 0.5);
                         moveForward(8, medium);
+                        turnClockwise(-20, 0.5);
+                        moveForward(11, medium);
 
                         sleep(400);
 
@@ -234,50 +238,66 @@ public class BlueAuto extends LinearOpMode {
                         }
 //                        sleep(500);
 
-                        moveForward(-5, medium);
-                        turnClockwise(-50, 0.5);
-                        moveForward(20, medium);
+
+                        moveForward(-8, medium);
+                        turnClockwise(-40, 0.5);
+                        moveForward(35, medium);
+
+//                        moveArm(50, medium);
+//                        moveWrist(1);
 //
-//
-//
-//                        turnClockwise(-22, 0.5);
-//                        moveForward(15, medium);
-//
-//
-//                        rightArm1.setPower(0.5);
-//                        leftArm1.setPower(0.5);
-//                        sleep(160);
-//
-//                        rightArm1.setPower(0);
-//                        leftArm1.setPower(0);
-//
-//                        wristMotor.setPower(0.5);
-//                        sleep(25);
-//                        wristMotor.setPower(0);
-//
-//
-//
-//
-//                        moveArm(20, 0.5);
-//
-////                        turnClockwise(5, 0.5);
-//                        moveForward(4, medium);
+//                        rightClaw.setPosition(0.1);
+//                        leftClaw.setPosition(0);
                     }
 
                     else if (position == 1)
                     {
                         moveForward(25, medium);
-                        pixelPush.setPosition(0);
+
+                        ElapsedTime newTimer = new ElapsedTime();
+
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
+
+                        }
+
+                        moveForward(-17, medium);
+
+                        turnClockwise(-35, medium);
+                        moveForward(35, medium);
+
+//                        moveArm(50, medium);
+//                        moveWrist(1);
+//
+//                        rightClaw.setPosition(0.1);
+//                        leftClaw.setPosition(0);
                     }
                     else
                     {
-                        moveForward(10, medium);
+                        moveForward(13, medium);
                         turnClockwise(13, 0.5);
                         moveForward(7, medium);
 
-                        pixelPush.setPosition(0);
+                        ElapsedTime newTimer = new ElapsedTime();
 
+                        while (newTimer.time() < 3)
+                        {
+                            moveServo();
 
+                        }
+
+                        moveForward(-13, medium);
+
+                        turnClockwise(-54, medium);
+
+                        moveForward(35, medium);
+
+//                        moveArm(50, medium);
+//                        moveWrist(1);
+//
+//                        rightClaw.setPosition(0.1);
+//                        leftClaw.setPosition(0);
                     }
 
 
@@ -458,6 +478,12 @@ public class BlueAuto extends LinearOpMode {
         // Stop all motion;
         rightArm1.setPower(0);
         leftArm1.setPower(0);
+    }
+
+    private void moveWrist(int power){
+        wristMotor.setPower(power);
+        sleep(225);
+        wristMotor.setPower(0);
     }
 
     private void moveForward(int howMuch, double speed) {

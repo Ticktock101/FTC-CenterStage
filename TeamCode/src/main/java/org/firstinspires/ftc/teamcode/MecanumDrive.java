@@ -157,10 +157,10 @@ public class MecanumDrive extends LinearOpMode {
             double wheelSpeed = 0.5; //0.0 - 1
 
 
-            leftFront.setPower(-(y + x + rx));
-            leftBack.setPower(-(y - x + rx) );
-            rightFront.setPower((y - x - rx));
-            rightBack.setPower((y + x - rx) );
+            leftFront.setPower(-(y + x + rx) * wheelSpeed);
+            leftBack.setPower(-(y - x + rx) * wheelSpeed);
+            rightFront.setPower((y - x - rx) * wheelSpeed);
+            rightBack.setPower((y + x - rx) * wheelSpeed);
 
             if (gamepad1.a) {
                 aButtonUpdate = true;

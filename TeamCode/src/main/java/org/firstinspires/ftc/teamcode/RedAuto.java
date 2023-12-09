@@ -147,8 +147,8 @@ public class RedAuto extends LinearOpMode {
 //        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftArm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         rightClaw = hardwareMap.get(Servo.class, "rightServo");
@@ -179,8 +179,8 @@ public class RedAuto extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightArm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        wristMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 //        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -224,9 +224,10 @@ public class RedAuto extends LinearOpMode {
 //                        pixelPush.setPosition(0);
 
                         moveForward(22, medium);
-                        turnClockwise(-40, 0.5);
+                        turnClockwise(-38, 0.5);
 //                        moveForward(7, medium);
 
+//                        pixelPush.setPosition(0);
                         ElapsedTime newTimer = new ElapsedTime();
 
                         while (newTimer.time() < 3)
@@ -234,10 +235,11 @@ public class RedAuto extends LinearOpMode {
                             moveServo();
 
                         }
-                        turnClockwise(-30, medium);
-                        moveForward(-30, medium);
 
+                        moveForward(-5, medium);
 
+                        turnClockwise(30, medium);
+                        moveForward(20, medium);
 
 //
 //
@@ -269,6 +271,7 @@ public class RedAuto extends LinearOpMode {
                     else if (position == 1)
                     {
                         moveForward(26, medium);
+//                        pixelPush.setPosition(0);
 
                         ElapsedTime newTimer = new ElapsedTime();
 
@@ -278,19 +281,19 @@ public class RedAuto extends LinearOpMode {
 
                         }
 
-                        turnClockwise(40, medium);
-                        moveForward(20, medium);
-
+                        moveForward(-5, medium);
                     }
                     else
                     {
+//                        moveForward(10, medium);
+//                        turnClockwise(13, 0.5);
+//                        moveForward(7, medium);
 //
+//                        pixelPush.setPosition(0);
+
                         moveForward(12, medium);
-                        turnClockwise(12, 0.5);
-                        moveForward(4, medium);
-
-//                        sleep(400);
-
+                        turnClockwise(10, 0.5);
+                        moveForward(6, medium);
 
                         ElapsedTime newTimer = new ElapsedTime();
 
@@ -300,18 +303,10 @@ public class RedAuto extends LinearOpMode {
 
                         }
 
-//                        wait(400);
-
-                        moveForward(-10, medium);
-                        turnClockwise(50, 0.5);
-                        moveForward(30, medium);
+                        moveForward(-5, medium);
 
 //                        moveArm(10, medium);
-
-//                        rightArm1.setPower(-0.5);
-//                        leftArm1.setPower(0.5);
                     }
-
 
 
                     count++;
@@ -436,12 +431,12 @@ public class RedAuto extends LinearOpMode {
             telemetry.addData("Y position", y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
 
-            if (x < 150)
+            if (x < 100)
             {
                 position = 0;
                 return true;
             }
-            else if (x > 250)
+            else if (x > 300)
             {
                 position = 1;
                 return true;
@@ -461,9 +456,6 @@ public class RedAuto extends LinearOpMode {
     }   // end method telemetryTfod()
 
     private void moveArm(int whatAngle, double speed){
-
-        setZeroPosition();
-
         // fetch motor position
         raPos = rightArm1.getCurrentPosition();
         laPos = leftArm1.getCurrentPosition();

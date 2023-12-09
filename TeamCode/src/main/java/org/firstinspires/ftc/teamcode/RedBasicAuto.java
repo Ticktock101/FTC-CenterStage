@@ -210,7 +210,7 @@ public class RedBasicAuto extends LinearOpMode {
                 while (count == 0)
                 {
 
-                    while (myLoopTimer.time() < 8 && !telemetryTfod())
+                    while (myLoopTimer.time() < 10 && !telemetryTfod())
                     {
                         telemetryTfod();
                     }
@@ -224,7 +224,7 @@ public class RedBasicAuto extends LinearOpMode {
 //                        pixelPush.setPosition(0);
 
                         moveForward(22, medium);
-                        turnClockwise(-38, 0.5);
+                        turnClockwise(-38, medium);
 //                        moveForward(7, medium);
 
 //                        pixelPush.setPosition(0);
@@ -236,11 +236,10 @@ public class RedBasicAuto extends LinearOpMode {
 
                         }
 
-                        moveForward(-5, medium);
+                        moveForward(-20, medium);
 
-//
-//
-//
+                        turnClockwise(-22, medium);
+                        moveForward(35,medium);
 //                        turnClockwise(-22, 0.5);
 //                        moveForward(15, medium);
 //
@@ -278,19 +277,15 @@ public class RedBasicAuto extends LinearOpMode {
 
                         }
 
-                        moveForward(-5, medium);
+                        moveForward(-21, medium);
+                        turnClockwise(-20, medium);
+                        moveForward(35, medium);
                     }
                     else
                     {
-//                        moveForward(10, medium);
-//                        turnClockwise(13, 0.5);
-//                        moveForward(7, medium);
-//
-//                        pixelPush.setPosition(0);
-
                         moveForward(12, medium);
                         turnClockwise(10, 0.5);
-                        moveForward(4, medium);
+                        moveForward(6, medium);
 
                         ElapsedTime newTimer = new ElapsedTime();
 
@@ -300,9 +295,9 @@ public class RedBasicAuto extends LinearOpMode {
 
                         }
 
-                        moveForward(-5, medium);
-
-//                        moveArm(10, medium);
+                        moveForward(-12, medium);
+                        turnClockwise(-40, medium);
+                        moveForward(35, medium);
                     }
 
 
