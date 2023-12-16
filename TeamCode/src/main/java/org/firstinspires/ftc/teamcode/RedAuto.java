@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-//package org.firstinspires.ftc.robotcontroller.external.samples;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,9 +18,16 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 import java.util.Timer;
 
-@Autonomous(name = "Red Basic Auto", group = "Concept")
+/*
+ * This OpMode illustrates the basics of TensorFlow Object Detection,
+ * including Java Builder structures for specifying Vision parameters.
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
+ */
+@Autonomous(name = "Red Auto", group = "Concept")
 //@Disabled
-public class RedBasicAuto extends LinearOpMode {
+public class RedAuto extends LinearOpMode {
 
     DcMotor rightFront;
     DcMotor rightBack;
@@ -104,6 +109,8 @@ public class RedBasicAuto extends LinearOpMode {
 
 //        setZeroPosition();
 
+
+
         rightArm1 = hardwareMap.get(DcMotor.class, "rightArm");
         leftArm1 = hardwareMap.get(DcMotor.class, "leftArm");
 //        rightArm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -172,7 +179,7 @@ public class RedBasicAuto extends LinearOpMode {
                 while (count == 0)
                 {
 
-                    while (myLoopTimer.time() < 10 && !telemetryTfod())
+                    while (myLoopTimer.time() < 8 && !telemetryTfod())
                     {
                         telemetryTfod();
                     }
@@ -186,7 +193,7 @@ public class RedBasicAuto extends LinearOpMode {
 //                        pixelPush.setPosition(0);
 
                         moveForward(22, medium);
-                        turnClockwise(-38, medium);
+                        turnClockwise(-38, 0.5);
 //                        moveForward(7, medium);
 
 //                        pixelPush.setPosition(0);
@@ -198,10 +205,14 @@ public class RedBasicAuto extends LinearOpMode {
 
                         }
 
-                        moveForward(-20, medium);
+                        moveForward(-5, medium);
 
-                        turnClockwise(-22, medium);
-                        moveForward(35,medium);
+                        turnClockwise(30, medium);
+                        moveForward(20, medium);
+
+//
+//
+//
 //                        turnClockwise(-22, 0.5);
 //                        moveForward(15, medium);
 //
@@ -239,12 +250,16 @@ public class RedBasicAuto extends LinearOpMode {
 
                         }
 
-                        moveForward(-21, medium);
-                        turnClockwise(-20, medium);
-                        moveForward(35, medium);
+                        moveForward(-5, medium);
                     }
                     else
                     {
+//                        moveForward(10, medium);
+//                        turnClockwise(13, 0.5);
+//                        moveForward(7, medium);
+//
+//                        pixelPush.setPosition(0);
+
                         moveForward(12, medium);
                         turnClockwise(10, 0.5);
                         moveForward(6, medium);
@@ -257,9 +272,9 @@ public class RedBasicAuto extends LinearOpMode {
 
                         }
 
-                        moveForward(-12, medium);
-                        turnClockwise(-40, medium);
-                        moveForward(35, medium);
+                        moveForward(-5, medium);
+
+//                        moveArm(10, medium);
                     }
 
 
