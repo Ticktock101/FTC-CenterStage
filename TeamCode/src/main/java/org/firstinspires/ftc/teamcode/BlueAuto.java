@@ -30,9 +30,9 @@ import java.util.Timer;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Blue Auto obj")
+@Autonomous(name = "Blue Auto")
 //@Disabled
-public class AutoBlue extends LinearOpMode {
+public class BlueAuto extends LinearOpMode {
 
     DcMotor rightFront;
     DcMotor rightBack;
@@ -45,7 +45,7 @@ public class AutoBlue extends LinearOpMode {
     DcMotor rightArm1;
     DcMotor leftArm1;
     DcMotor wristMotor;
-    
+
     private ElapsedTime runtime = new ElapsedTime();
 
     double targetArmHeight = 0;
@@ -176,63 +176,63 @@ public class AutoBlue extends LinearOpMode {
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
-        
+
         while(opModeInInit()) {
             pixelPush.setPosition(0);
             telemetry.addData("l:", leftColor.getDistance(DistanceUnit.CM));
             telemetry.addData("r:", rightColor.getDistance(DistanceUnit.CM));
             telemetry.update();
-            
+
             rightClaw.setPosition(0);
             leftClaw.setPosition(0);
         }
-        
+
         waitForStart();
 
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-        
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         leftFront.setTargetPosition(650);
         rightFront.setTargetPosition(650);
         leftBack.setTargetPosition(650);
         rightBack.setTargetPosition(650);
-        
+
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        
+
         leftFront.setPower(.3);
         rightFront.setPower(.3);
         leftBack.setPower(.3);
         rightBack.setPower(.3);
-        
+
         while(leftFront.getCurrentPosition() < 600) {};
-        
+
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-        
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         leftFront.setTargetPosition(850);
         rightFront.setTargetPosition(850);
         leftBack.setTargetPosition(850);
         rightBack.setTargetPosition(850);
-        
+
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        
+
         leftFront.setPower(.3);
         rightFront.setPower(.3);
         leftBack.setPower(.3);
         rightBack.setPower(.3);
-        
+
         boolean detected = false;
-        
+
         while(!detected) {
             if (leftColor.getDistance(DistanceUnit.CM) < 5) {
                 //left
@@ -253,373 +253,375 @@ public class AutoBlue extends LinearOpMode {
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(.3);
                 rightFront.setPower(-.3);
                 leftBack.setPower(-.3);
                 rightBack.setPower(.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 100) {};
-            
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
-                moveForward(-2, 0.5);
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
                 moveServo();
-                
+
+                moveForward(-2, 0.5);
+
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(-.3);
                 rightFront.setPower(-.3);
                 leftBack.setPower(-.3);
                 rightBack.setPower(-.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 200) {};
-                
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(-.3);
                 rightFront.setPower(.3);
                 leftBack.setPower(.3);
                 rightBack.setPower(-.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 1500) {};
-            
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-            
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(-.3);
                 rightFront.setPower(.3);
                 leftBack.setPower(-.3);
                 rightBack.setPower(.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 900) {};
-            
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 moveArm(500, 0.5);
-                
+
                 wristMotor.setPower(1);
-                sleep(325);
+                sleep(300);
                 wristMotor.setPower(0);
-                
+
                 moveArm(25, 0.5);
-                
+
                 leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-                
+
                 moveForward(10, 0.5);
-                
-                moveRight2(275);
-                
+
+                moveLeft2(50);
+
                 moveForward(5, 0.5);
                 ElapsedTime timer = new ElapsedTime();
-                
+
                 while(timer.time() < 2)
                 {
                     rightClaw.setPosition(0.2);
                     leftClaw.setPosition(0.2);
                 }
-                
-                
-                
+
+
+
                 moveForward(-5, 0.5);
-              
-            
+
+
                 break;
             case 1:
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(-.3);
                 rightFront.setPower(.3);
                 leftBack.setPower(-.3);
                 rightBack.setPower(.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 850) {};
-            
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
-                
+
+
                 moveForward(-1, 0.5);
 
-                
-                
+
+
                 moveServo();
                 moveForward(-1, 0.5);
 
-                
+
                 leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-                
-                
+
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(-.3);
                 rightFront.setPower(.3);
                 leftBack.setPower(.3);
                 rightBack.setPower(-.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 600) {};
-            
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
+
                 leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-                
+
                 moveForward(18, 0.5);
-                
+
                 moveArm(500, 0.5);
-                
+
                 wristMotor.setPower(1);
-                sleep(325);
+                sleep(290);
                 wristMotor.setPower(0);
-                
+
                 moveArm(25, 0.5);
-                
+
                 moveRight2(125);
-                
+
                 moveForward(20, 0.5);
-                
+
                 ElapsedTime timer3 = new ElapsedTime();
-                
+
                 while(timer3.time() < 2)
                 {
                     rightClaw.setPosition(0.2);
                     leftClaw.setPosition(0.2);
                 }
-                
+
                 moveForward(-5, 0.5);
-                
-                
+
+
                 break;
             case 2:
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(.3);
                 rightFront.setPower(-.3);
                 leftBack.setPower(.3);
                 rightBack.setPower(-.3);
-                
-                while(Math.abs(leftFront.getCurrentPosition()) < 1000) {};
-            
+
+                while(Math.abs(leftFront.getCurrentPosition()) < 950) {};
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
+
                 // moveRight2(100);
-                
-                moveForward(1, 0.5);
-                
+
+                moveForward(2, 0.5);
+
                 moveLeft2(100);
-                
+
                 moveServo();
-                
+
                 moveForward(-25, 0.5);
-                
+
                 leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
+                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
                 leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
                 rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
+
                 leftFront.setPower(.3);
                 rightFront.setPower(-.3);
                 leftBack.setPower(.3);
                 rightBack.setPower(-.3);
-                
+
                 while(Math.abs(leftFront.getCurrentPosition()) < 1825) {};
-            
+
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
-                
+
                 moveArm(500, 0.5);
-                
+
                 wristMotor.setPower(1);
-                sleep(325);
+                sleep(300);
                 wristMotor.setPower(0);
-                
+
                 moveArm(25, 0.5);
 
-                moveRight2(200);
-                
+                moveRight2(175);
+
                 moveForward(15, 0.5);
-                
+
                 ElapsedTime timer2 = new ElapsedTime();
-                
+
                 while(timer2.time() < 2)
                 {
                     rightClaw.setPosition(0.2);
                     leftClaw.setPosition(0.2);
                 }
-                
-                
-                
+
+
+
                 moveForward(-5, 0.5);
-                
+
                 break;
         }
-        
-        
+
+
     }   // end runOpMode()
-    
+
     public void moveLeft2(int distance)
     {
-                leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
-                leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
-                leftFront.setPower(-.3);
-                rightFront.setPower(.3);
-                leftBack.setPower(.3);
-                rightBack.setPower(-.3);
-                
-                while(Math.abs(leftFront.getCurrentPosition()) < distance) {};
-            
-                leftFront.setPower(0);
-                rightFront.setPower(0);
-                leftBack.setPower(0);
-                rightBack.setPower(0);
-                
-                
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+
+        leftFront.setPower(-.3);
+        rightFront.setPower(.3);
+        leftBack.setPower(.3);
+        rightBack.setPower(-.3);
+
+        while(Math.abs(leftFront.getCurrentPosition()) < distance) {};
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+
     }
-    
+
     public void moveRight2(int distance)
     {
-                leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
-                
-                leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-                
-                leftFront.setPower(.3);
-                rightFront.setPower(-.3);
-                leftBack.setPower(-.3);
-                rightBack.setPower(.3);
-                
-                while(Math.abs(leftFront.getCurrentPosition()) < distance) {};
-            
-                leftFront.setPower(0);
-                rightFront.setPower(0);
-                leftBack.setPower(0);
-                rightBack.setPower(0);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+
+        leftFront.setPower(.3);
+        rightFront.setPower(-.3);
+        leftBack.setPower(-.3);
+        rightBack.setPower(.3);
+
+        while(Math.abs(leftFront.getCurrentPosition()) < distance) {};
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
     }
-    
+
 
     public boolean moveServo()
     {
         pixelPush.setPosition(1);
-        
+
         runtime.reset();
         while(runtime.seconds() < 2);
-        
+
         return true;
     }
 
@@ -657,19 +659,19 @@ public class AutoBlue extends LinearOpMode {
     }
 
     private void moveWrist(int time){
-        
+
         wristMotor.setPower(-0.5);
         sleep(time);
         wristMotor.setPower(0);
     }
 
     private boolean moveForward(int howMuch, double speed) {
-        
+
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-                rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-                leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-                rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
-        
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+
         // howMuch is in inches. A negative howMuch moves backward.
 
         setZeroPosition();
@@ -726,7 +728,7 @@ public class AutoBlue extends LinearOpMode {
         rightFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
-        
+
         return true;
     }
 
